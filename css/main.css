@@ -1,0 +1,14 @@
+.nodeshape {
+    stroke: black;
+    stroke-width: 1px;
+    fill: #ffaaaa;
+}
+
+.nodetext {
+    font: 12px sans-serif;
+}
+
+.link {
+    stroke: #777777;
+    stroke-width: 2px;
+}
