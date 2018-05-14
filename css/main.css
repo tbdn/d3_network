@@ -12,3 +12,8 @@
     stroke: #777777;
     stroke-width: 2px;
 }
+
+#form_filter {
+    width: 200px;
+    float: right;
+}
