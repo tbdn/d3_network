@@ -1,6 +1,6 @@
 var filename = "../data/data.json";
-
-d3.json(filename, function(data){
+var testfile = "../data/data_small.json";
+d3.json(testfile, function(data){
 
     var incoming = [];
     var outgoing = [];
@@ -40,7 +40,7 @@ d3.json(filename, function(data){
         .data(data.nodes)
         .enter()
         .append("g")
-        .attr("class", "node")
+        .attr("class", "node");
 
     node.append("title")
         .text(function(d) { return d.ip+"\n"+"incoming: "+incoming[d.index]+"\n"+"outgoing: "+outgoing[d.index]; });
