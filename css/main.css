@@ -3,11 +3,12 @@
  */
 
 #networkpanel {
+    float: left;
     width: 1500px;
     height: 900px;
     border: 1px solid black;
+    position: relative;
 }
-
 
 /**
     Styling: Node Options
@@ -33,8 +34,10 @@
  */
 
 #form_filter {
-    width: 200px;
-    float: right;
+    position: relative;
+    float: left;
+    width: auto;
+    padding-left: 25px;
 }
 
 .filter_ul {
@@ -62,6 +65,7 @@
     Styling: Time Slider
  */
 #slidecontainer {
+    float: left;
     margin-top: 25px;
     margin-left: 375px;
     width: 750px;
