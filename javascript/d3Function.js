@@ -10,8 +10,8 @@ d3.json(testfile, function(data){
         outgoing[link.source] = outgoing[link.source] == undefined?1:outgoing[link.source]+1;
     }
 
-    var width = 1500,
-        height = 900;
+    var width = document.getElementById("networkpanel").clientWidth,
+        height = document.getElementById("networkpanel").clientHeight;
 
     var svg = d3.select("#networkpanel")
         .append("svg")

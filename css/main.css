@@ -1,4 +1,15 @@
 /**
+    Styling: General Network Panel
+ */
+
+#networkpanel {
+    width: 1500px;
+    height: 900px;
+    border: 1px solid black;
+}
+
+
+/**
     Styling: Node Options
  */
 
