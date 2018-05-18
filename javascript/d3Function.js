@@ -11,10 +11,9 @@ d3.json(testfile, function(data){
     }
 
     var width = 1500,
-        height = 1500;
+        height = 900;
 
-    var svg = d3.select("body")
-        .append("center")
+    var svg = d3.select("#networkpanel")
         .append("svg")
         .attr("width", width)
         .attr("height", height);
