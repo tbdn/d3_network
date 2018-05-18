@@ -1,8 +1,14 @@
-var slider = document.getElementById("timeSlider");
-var output = document.getElementById("slider_output_test");
-output.innerHTML = "Aktueller Slider Wert : " + slider.value;
-
-slider.oninput = function() {
-    console.log("FUNTKIONIERT : " + this.value);
-    output.innerHTML = "Aktueller Slider Wert : " + this.value;
-};
+// Code from http://jqueryui.com/slider/#range
+$( function() {
+    $( "#timeSlider" ).slider({
+        range: true,
+        min: 0,
+        max: 100,
+        values: [ 30, 70 ],
+        slide: function( event, ui ) {
+            $( "#slider_range" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+        }
+    });
+    $( "#slider_range" ).val($( "#timeSlider" ).slider( "values", 0 ) +
+        " - " + $( "#timeSlider" ).slider( "values", 1 ) );
+} );
