@@ -1,3 +1,7 @@
+/**
+    Styling: Node Options
+ */
+
 .nodeshape {
     stroke: black;
     stroke-width: 1px;
@@ -13,7 +17,32 @@
     stroke-width: 2px;
 }
 
+/**
+    Styling: Filter Options
+ */
+
 #form_filter {
     width: 200px;
     float: right;
+}
+
+.filter_ul {
+    list-style: none;
+}
+
+#layer_4 { }
+
+#layer_3 { }
+
+.filter_label_text {
+    position: relative;
+}
+
+.filter_label_layer {
+    top: 14px;
+    white-space: nowrap;
+    position: absolute;
+    text-align: left;
+    transform-origin: bottom;
+    transform: rotate(-90deg);
 }
