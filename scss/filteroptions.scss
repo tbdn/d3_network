@@ -1,0 +1,31 @@
+/**
+    Styling: Filter Options
+ */
+
+#form_filter {
+  position: relative;
+  float: left;
+  width: auto;
+  padding-left: 25px;
+}
+
+.filter_ul {
+  list-style: none;
+}
+
+#layer_4 { }
+
+#layer_3 { }
+
+.filter_label_text {
+  position: relative;
+}
+
+.filter_label_layer {
+  top: 14px;
+  white-space: nowrap;
+  position: absolute;
+  text-align: left;
+  transform-origin: bottom;
+  transform: rotate(-90deg);
+}

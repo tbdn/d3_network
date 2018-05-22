@@ -1,0 +1,22 @@
+/**
+    Styling: Time Slider
+ */
+#slidecontainer {
+  float: left;
+  margin-top: 25px;
+  margin-left: 375px;
+  width: 750px;
+}
+
+#timeSlider_label {
+  position: relative;
+  float: left;
+  top: -19px;
+  left: -135px;
+}
+
+#slider_range{
+  border:0;
+  color:#f6931f;
+  font-weight:bold;
+}
