@@ -27,7 +27,15 @@ d3.json(testfile, function(data){
                     // register on click event
                     var lVisibility = this.checked ? "visible" : "hidden";
                         link.style("visibility", function (o) {
-                        var lOriginalVisibility = $(this).css("visibility");
+                            var lOriginalVisibility = $(this).css("visibility");
+                            /**
+                             * ForEach Pseudocode
+                             * Alle Layer durchlaufen
+                             * Falls einer davon visible
+                             *  und der != aktuelle checkbox:
+                             *  visible = true
+                             */
+
                             if(o.layers.includes(d)) {
                                 return d === d ? lVisibility : lOriginalVisibility;
                             } else {
