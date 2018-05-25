@@ -9,7 +9,7 @@ const svg = d3.select("#networkpanel")
 
 d3.json(testfile, function(data){
     // Filter version 2.0
-    d3.select(".filterContainer").selectAll("div")
+    d3.select(".filterContainerLayer5").selectAll("div")
         .data(["icmp", "tcp", "udp", "lol"])
         .enter()
         .append("div")
