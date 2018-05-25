@@ -1,6 +1,7 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import wrappers.NaivePacket;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,26 +18,45 @@ public class Preprocessor {
 
     public void parse() throws IOException {
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Link.class, new PacketDeserializer());
+        builder.registerTypeAdapter(NaivePacket.class, new PacketDeserializer());
         Gson parser = builder.create();
-        ArrayList<Link> links = parser.fromJson(new FileReader(input), new TypeToken<ArrayList<Link>>(){}.getType());
-        links.removeIf(link -> link.srcIP == null || link.dstIP == null);
+        ArrayList<NaivePacket> naivePackets = parser.fromJson(new FileReader(input), new TypeToken<ArrayList<NaivePacket>>(){}.getType());
+        System.out.println("Done Parsing");
+        naivePackets.removeIf(link -> link.srcIP == null || link.dstIP == null);
+
+        final int size = naivePackets.size();
+
+        ArrayList<Link> uniqueLinks = new ArrayList<>();
+        int j = 0;
+        for(NaivePacket npacket : naivePackets){
+            j++;
+            Link l = new Link(npacket.srcIP, npacket.dstIP);
+            if(uniqueLinks.contains(l)){
+                l = uniqueLinks.get(uniqueLinks.indexOf(l));
+            }else{
+                uniqueLinks.add(l);
+                //System.out.printf("%d/%d packets, %d links%n",j,size, uniqueLinks.size());
+            }
+
+            l.packets.add(new Packet(npacket));
+        }
+
+        System.out.println("Done Linking");
+
         HashSet<String> uniqueIPs = new HashSet<>();
 
-        for(Link link : links){
+        for(Link link : uniqueLinks){
             uniqueIPs.add(link.srcIP);
             uniqueIPs.add(link.dstIP);
         }
-
-        uniqueIPs.remove(null);
 
         ArrayList<String> nodeList = new ArrayList<>(uniqueIPs);
         Node[] nodes = new Node[nodeList.size()];
         for(int i = 0; i < nodeList.size(); i++){
             nodes[i] = new Node(nodeList.get(i));
         }
-        System.out.println(uniqueIPs);
-        for(Link link : links) {
+
+        for(Link link : uniqueLinks) {
             link.source = nodeList.indexOf(link.srcIP);
             link.target = nodeList.indexOf(link.dstIP);
         }
@@ -64,7 +84,7 @@ public class Preprocessor {
         FileWriter writer = new FileWriter("./out/packets.json");
 
         DataWrapper d = new DataWrapper();
-        d.links = links;
+        d.links = uniqueLinks;
         d.nodes = nodes;
         parser.toJson(d, writer);
         writer.close();
