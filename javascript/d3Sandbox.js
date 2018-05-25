@@ -29,6 +29,8 @@ d3.json(testfile, function(data){
                         link.style("visibility", function (o) {
                             var lOriginalVisibility = $(this).css("visibility");
                             /**
+                             * //FIXME
+                             * //TODO
                              * ForEach Pseudocode
                              * Alle Layer durchlaufen
                              * Falls einer davon visible
