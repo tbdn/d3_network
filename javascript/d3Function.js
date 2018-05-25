@@ -1,5 +1,6 @@
 var filename = "../data/data.json";
 var testfile = "../data/data_small.json";
+
 d3.json(testfile, function(data){
 
     var incoming = [];
