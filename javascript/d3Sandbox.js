@@ -10,7 +10,7 @@ const svg = d3.select("#networkpanel")
 d3.json(testfile, function(data){
     // Filter version 2.0
     d3.select(".filterContainer").selectAll("div")
-        .data(["icmp", "tcp", "udp"])
+        .data(["icmp", "tcp", "udp", "lol"])
         .enter()
         .append("div")
         .attr("class", "checkbox-container")
@@ -25,12 +25,15 @@ d3.json(testfile, function(data){
                 .attr("checked", true)
                 .on("click", function (d, i) {
                     // register on click event
-                    console.log(this);
                     var lVisibility = this.checked ? "visible" : "hidden";
-                    link.style("visibility", function (o) {
-                        var lOriginalVisibility = $(this).css("visibility");
-                        return o.layers[0] === d ? lVisibility : lOriginalVisibility;
-                    });
+                        link.style("visibility", function (o) {
+                            if(o.layers.includes(d)) {
+                                var lOriginalVisibility = $(this).css("visibility");
+                                return d === d ? lVisibility : lOriginalVisibility;
+                            } else {
+                                return lOriginalVisibility;
+                            }
+                        });
                 });
             d3.select(this).append("span")
                 .text(function (d) {
@@ -53,7 +56,11 @@ d3.json(testfile, function(data){
         .enter()
         .append("line")
         .attr("class", function (d) {
-            return "link " + d.layers;
+            var classes = "link";
+            d.layers.forEach(function(elem) {
+                classes = classes + " " + elem;
+            });
+            return classes;
         });
 
     // draw the graph nodes
