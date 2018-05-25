@@ -1,35 +1,47 @@
-var connectionsAndNodesFile = "../data/conandnode.json";
-var complete = "../data/completePackets.json";
+var testfile = "../data/testfile.json";
 
-d3.json(connectionsAndNodesFile, function(data){
+const width = document.getElementById("networkpanel").clientWidth;
+const height = document.getElementById("networkpanel").clientHeight;
+const svg = d3.select("#networkpanel")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height);
 
-    // Find blank links, which give the error
-    // "Uncaught TypeError: Cannot read property 'weight' of undefined"
-    /*
-    data.nodes.forEach(function(link, index, list) {
-        if (typeof data.nodes[link.source] === 'undefined') {
-            console.log('undefined source', link);
-        }
-        if (typeof data.nodes[link.destination] === 'undefined') {
-            console.log('undefined destination', link);
-        }
-    });
-    */
-
-    var width = document.getElementById("networkpanel").clientWidth,
-        height = document.getElementById("networkpanel").clientHeight;
-
-    var svg = d3.select("#networkpanel")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
-
-    console.log(data);
+d3.json(testfile, function(data){
+    // Filter version 2.0
+    d3.select(".filterContainer").selectAll("div")
+        .data(["icmp", "tcp", "udp"])
+        .enter()
+        .append("div")
+        .attr("class", "checkbox-container")
+        .append("label")
+        .each(function (d) {
+            // create checkbox for each data
+            d3.select(this).append("input")
+                .attr("type", "checkbox")
+                .attr("id", function (d) {
+                    return "chk_" + d;
+                })
+                .attr("checked", true)
+                .on("click", function (d, i) {
+                    // register on click event
+                    console.log(this);
+                    var lVisibility = this.checked ? "visible" : "hidden";
+                    link.style("visibility", function (o) {
+                        var lOriginalVisibility = $(this).css("visibility");
+                        return o.layers[0] === d ? lVisibility : lOriginalVisibility;
+                    });
+                });
+            d3.select(this).append("span")
+                .text(function (d) {
+                    return d;
+                });
+        });
 
     // create the layout
     var force = d3.layout.force()
-        .charge(-300)
-        .linkDistance(100)
+        .charge(-200)
+        .linkDistance(20)
         .size([width, height])
         .nodes(data.nodes)
         .links(data.links)
@@ -40,7 +52,9 @@ d3.json(connectionsAndNodesFile, function(data){
         .data(data.links)
         .enter()
         .append("line")
-        .attr("class", "link");
+        .attr("class", function (d) {
+            return "link " + d.layers;
+        });
 
     // draw the graph nodes
     var node = svg.selectAll(".node")
@@ -49,10 +63,15 @@ d3.json(connectionsAndNodesFile, function(data){
         .append("g")
         .attr("class", "node");
 
-    /*
+    link.append("title")
+        .text(function(d) {
+            return "source: " + d.source.ip + "\n" + "target: " + d.target.ip;
+        });
+
     node.append("title")
-        .text(function(d) { return d.ip+"\n"+"incoming: "+incoming[d.index]+"\n"+"outgoing: "+outgoing[d.index]; });
-     */
+        .text(function (d) {
+            return "ip: " + d.ip;
+        });
 
     node.append("circle")
         .attr("class", "nodeshape")
@@ -68,6 +87,7 @@ d3.json(connectionsAndNodesFile, function(data){
             .attr("y1", function(d) { return d.source.y; })
             .attr("x2", function(d) { return d.target.x; })
             .attr("y2", function(d) { return d.target.y; });
+
         node.attr("transform", function(d) {
             return "translate(" + d.x + ", " + d.y + ")";
         });
