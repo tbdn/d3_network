@@ -65,3 +65,7 @@
   text-align: left;
   transform-origin: bottom;
   transform: rotate(-90deg); }
+
+.checkbox-container {
+  padding-left: 45px;
+  padding-top: 5px; }
