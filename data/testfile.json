@@ -33,7 +33,7 @@
       "source":0,
       "target":1,
       "layers": [
-        "icmp"
+        "ICMP"
       ],
       "srcIP": "195.115.218.108",
       "dstIP": "172.16.112.149",
@@ -44,7 +44,7 @@
       "source":1,
       "target":2,
       "layers": [
-        "icmp",
+        "ICMP",
         "lol"
       ],
       "srcIP": "195.115.218.108",
@@ -56,7 +56,7 @@
       "source":8,
       "target":0,
       "layers": [
-        "icmp",
+        "ICMP",
         "lol"
       ],
       "srcIP": "195.115.218.108",
@@ -68,7 +68,7 @@
       "source":8,
       "target":7,
       "layers": [
-        "tcp",
+        "TCP",
         "lol"
       ],
       "srcIP": "195.115.218.108",
@@ -80,7 +80,7 @@
       "source":6,
       "target":4,
       "layers": [
-        "tcp",
+        "TCP",
         "lol"
       ],
       "srcIP": "195.115.218.108",
@@ -92,7 +92,7 @@
       "source":4,
       "target":3,
       "layers": [
-        "udp",
+        "UDP",
         "lol"
       ],
       "srcIP": "195.115.218.108",
@@ -104,7 +104,7 @@
       "source":2,
       "target":5,
       "layers": [
-        "udp",
+        "UDP",
         "lol"
       ],
       "srcIP": "195.115.218.108",

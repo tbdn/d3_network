@@ -10,7 +10,7 @@ const svg = d3.select("#networkpanel")
 d3.json(testfile, function(data){
     // Filter version 2.0
     d3.select(".filterContainerLayer5").selectAll("div")
-        .data(["icmp", "tcp", "udp", "lol"])
+        .data(["DNS", "HTTP", "FTP", "lol"])
         .enter()
         .append("div")
         .attr("class", "checkbox-container")
@@ -44,6 +44,48 @@ d3.json(testfile, function(data){
                                 return lOriginalVisibility;
                             }
                         });
+                });
+            d3.select(this).append("span")
+                .text(function (d) {
+                    return d;
+                });
+    });
+
+    d3.select(".filterContainerLayer4").selectAll("div")
+        .data(["ICMP", "TCP", "UDP"])
+        .enter()
+        .append("div")
+        .attr("class", "checkbox-container")
+        .append("label")
+        .each(function (d) {
+            // create checkbox for each data
+            d3.select(this).append("input")
+                .attr("type", "checkbox")
+                .attr("id", function (d) {
+                    return "chk_" + d;
+                })
+                .attr("checked", true)
+                .on("click", function (d, i) {
+                    // register on click event
+                    var lVisibility = this.checked ? "visible" : "hidden";
+                    link.style("visibility", function (o) {
+                        var lOriginalVisibility = $(this).css("visibility");
+                        /**
+                         * //FIXME
+                         * //TODO
+                         * ForEach Pseudocode
+                         * Alle Layer durchlaufen
+                         * Falls einer davon visible
+                         *  und der != aktuelle checkbox:
+                         *  visible = true
+                         */
+
+                        if(o.layers.includes(d)) {
+                            return d === d ? lVisibility : lOriginalVisibility;
+                        } else {
+                            return lOriginalVisibility;
+                        }
+                    });
                 });
             d3.select(this).append("span")
                 .text(function (d) {
