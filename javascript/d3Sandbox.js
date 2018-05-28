@@ -29,7 +29,6 @@ d3.json(testfile, function(data){
                     var lVisibility = this.checked ? "visible" : "hidden";
                         link.style("visibility", function (o) {
                             var lOriginalVisibility = $(this).css("visibility");
-                            console.log("lOriginalVisibility = " + lOriginalVisibility);
                             /**
                              * //FIXME
                              * //TODO
@@ -42,13 +41,11 @@ d3.json(testfile, function(data){
                             var newVIS;
                             o.packets.forEach(function(packet){
                                 if(packet.layers.includes(d)) {
-                                    console.log("d = " + d);
                                     newVIS = lVisibility;
                                 } else {
                                     newVIS = lOriginalVisibility;
                                 }
                             })
-                            console.log("newVIS = " + newVIS);
                             return newVIS;
                         });
                 });
