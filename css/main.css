@@ -38,6 +38,10 @@
   top: -19px;
   left: -135px; }
 
+#timeSlider {
+    left: 20px;
+}
+
 #slider_range {
   border: 0;
   color: #f6931f;
