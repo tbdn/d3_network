@@ -3,6 +3,7 @@ var packets = "../data/packets.json";
 
 var minTime = null;
 var maxTime = null;
+var showLocals = false;
 var timeRange;
 
 const width = document.getElementById("networkpanel").clientWidth;
@@ -43,7 +44,7 @@ var checkVisiblility = function(that, o, d) {
     return newVIS;
 }
 
-d3.json(testfile, function(data){
+d3.json(packets, function(data){
     // Filter version 2.0
     d3.select(".filterContainerLayer5").selectAll("div")
         .data(["dns", "http", "ftp", "frame"])
@@ -73,6 +74,19 @@ d3.json(testfile, function(data){
                     return d;
                 });
         });
+
+    var dingdong = function(){
+        showLocals = !showLocals;
+        d3.select("#networkpanel").selectAll(".node").each(function (n) {
+            if(n.local && showLocals){
+                d3.select(this).select("circle").attr("style","fill: lime");
+            }else{
+                d3.select(this).select("circle").attr("style","");
+            }
+        });
+    };
+
+    $("#clickme").click(dingdong);
 
     d3.select(".filterContainerLayer4").selectAll("div")
         .data(["icmp", "tcp", "udp"])
