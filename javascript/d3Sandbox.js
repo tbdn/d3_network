@@ -1,6 +1,10 @@
 var testfile = "../data/testfile.json";
 var packets = "../data/packets.json";
 
+var minTime = null;
+var maxTime = null;
+var timeRange;
+
 const width = document.getElementById("networkpanel").clientWidth;
 const height = document.getElementById("networkpanel").clientHeight;
 const svg = d3.select("#networkpanel")
@@ -84,13 +88,27 @@ d3.json(testfile, function(data){
                          *  visible = true
                          */
                         var newVIS;
-                        o.packets.forEach(function(packet){
-                            if(packet.layers.includes(d)) {
-                                newVIS = lVisibility;
+
+                        var minPercentage = $( "#timeSlider ").slider( "values", 0 )/100;
+                        var maxPercentage = $( "#timeSlider" ).slider( "values", 1 )/100;
+                        console.log("minPercentage: "+minPercentage);
+                        console.log("maxPercentage: "+maxPercentage);
+                        console.log("minTime: "+minTime);
+                        console.log("maxTime: "+maxTime);
+                        o.packets.some(function(packet){
+                            var minTimeBoxed = minTime + minPercentage*timeRange;
+                            var maxTimeBoxed = minTime + maxPercentage*timeRange;
+
+
+                            //TODO: 35, 35 funktioniert
+                            if(packet.layers.includes(d) && $("#chk_"+d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
+                                newVIS = "visible";
+                                return true;
                             } else {
-                                newVIS = lOriginalVisibility;
+                                newVIS = "hidden";
+                                return false;
                             }
-                        })
+                        });
                         return newVIS;
                     });
                 });
@@ -122,7 +140,15 @@ d3.json(testfile, function(data){
                         classes = classes + " " + elem;
                     }
                 });
+                packet.timestamp = parseFloat(packet.timestamp);
+                if(minTime == null || packet.timestamp < minTime){
+                    minTime = packet.timestamp;
+                }
+                if(maxTime == null || packet.timestamp > maxTime){
+                    maxTime = packet.timestamp;
+                }
             });
+            timeRange = maxTime-minTime;
             return classes;
         });
 

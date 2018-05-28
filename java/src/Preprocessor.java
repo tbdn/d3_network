@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Preprocessor {
@@ -20,9 +21,18 @@ public class Preprocessor {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(NaivePacket.class, new PacketDeserializer());
         Gson parser = builder.create();
-        ArrayList<NaivePacket> naivePackets = parser.fromJson(new FileReader(input), new TypeToken<ArrayList<NaivePacket>>(){}.getType());
+        ArrayList<NaivePacket> rawNaivePackets = parser.fromJson(new FileReader(input), new TypeToken<ArrayList<NaivePacket>>(){}.getType());
         System.out.println("Done Parsing");
-        naivePackets.removeIf(link -> link.srcIP == null || link.dstIP == null);
+        rawNaivePackets.removeIf(link -> link.srcIP == null || link.dstIP == null);
+
+        Random r = new Random();
+
+        ArrayList<NaivePacket> naivePackets = new ArrayList<>();
+        for(int i = 0; i < 50; i++){
+            int randInt = r.nextInt(rawNaivePackets.size());
+            naivePackets.add(rawNaivePackets.get(randInt));
+            rawNaivePackets.remove(randInt);
+        }
 
         final int size = naivePackets.size();
 
