@@ -13,18 +13,6 @@ const svg = d3.select("#networkpanel")
     .attr("height", height);
 
 var checkVisiblility = function(that, o, d) {
-    console.log(d);
-
-    var lOriginalVisibility = that.css("visibility");
-    /**
-     * //FIXME
-     * //TODO
-     * ForEach Pseudocode
-     * Alle Layer durchlaufen
-     * Falls einer davon visible
-     *  und der != aktuelle checkbox:
-     *  visible = true
-     */
     var newVIS;
 
     var minPercentage = $( "#timeSlider ").slider( "values", 0 )/100;
