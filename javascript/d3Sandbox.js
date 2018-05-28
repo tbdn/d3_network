@@ -149,7 +149,7 @@ d3.json(testfile, function(data){
 
     node.append("text")
         .attr("class", "nodetext")
-        .text(function(d) { return d.name; });
+        .text(function(d) { return d.ip; });
 
     // define what to do one each tick of the animation
     force.on("tick", function() {
