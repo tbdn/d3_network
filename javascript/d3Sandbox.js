@@ -1,4 +1,5 @@
 var testfile = "../data/testfile.json";
+var packets = "../data/packets.json";
 
 const width = document.getElementById("networkpanel").clientWidth;
 const height = document.getElementById("networkpanel").clientHeight;
@@ -10,7 +11,7 @@ const svg = d3.select("#networkpanel")
 d3.json(testfile, function(data){
     // Filter version 2.0
     d3.select(".filterContainerLayer5").selectAll("div")
-        .data(["DNS", "HTTP", "FTP", "lol"])
+        .data(["dns", "http", "ftp", "frame"])
         .enter()
         .append("div")
         .attr("class", "checkbox-container")
@@ -37,22 +38,25 @@ d3.json(testfile, function(data){
                              *  und der != aktuelle checkbox:
                              *  visible = true
                              */
-
-                            if(o.layers.includes(d)) {
-                                return d === d ? lVisibility : lOriginalVisibility;
-                            } else {
-                                return lOriginalVisibility;
-                            }
+                            var newVIS;
+                            o.packets.forEach(function(packet){
+                                if(packet.layers.includes(d)) {
+                                    newVIS = lVisibility;
+                                } else {
+                                    newVIS = lOriginalVisibility;
+                                }
+                            })
+                            return newVIS;
                         });
                 });
             d3.select(this).append("span")
                 .text(function (d) {
                     return d;
                 });
-    });
+        });
 
     d3.select(".filterContainerLayer4").selectAll("div")
-        .data(["ICMP", "TCP", "UDP"])
+        .data(["icmp", "tcp", "udp"])
         .enter()
         .append("div")
         .attr("class", "checkbox-container")
@@ -79,12 +83,15 @@ d3.json(testfile, function(data){
                          *  und der != aktuelle checkbox:
                          *  visible = true
                          */
-
-                        if(o.layers.includes(d)) {
-                            return d === d ? lVisibility : lOriginalVisibility;
-                        } else {
-                            return lOriginalVisibility;
-                        }
+                        var newVIS;
+                        o.packets.forEach(function(packet){
+                            if(packet.layers.includes(d)) {
+                                newVIS = lVisibility;
+                            } else {
+                                newVIS = lOriginalVisibility;
+                            }
+                        })
+                        return newVIS;
                     });
                 });
             d3.select(this).append("span")
@@ -109,8 +116,12 @@ d3.json(testfile, function(data){
         .append("line")
         .attr("class", function (d) {
             var classes = "link";
-            d.layers.forEach(function(elem) {
-                classes = classes + " " + elem;
+            d.packets.forEach(function(packet) {
+                packet.layers.forEach(function(elem){
+                    if(!classes.includes(elem)) {
+                        classes = classes + " " + elem;
+                    }
+                });
             });
             return classes;
         });
