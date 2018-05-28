@@ -11,7 +11,7 @@ const svg = d3.select("#networkpanel")
 d3.json(testfile, function(data){
     // Filter version 2.0
     d3.select(".filterContainerLayer5").selectAll("div")
-        .data(["dns", "http", "ftp", "lol"])
+        .data(["dns", "http", "ftp", "frame"])
         .enter()
         .append("div")
         .attr("class", "checkbox-container")
@@ -29,6 +29,7 @@ d3.json(testfile, function(data){
                     var lVisibility = this.checked ? "visible" : "hidden";
                         link.style("visibility", function (o) {
                             var lOriginalVisibility = $(this).css("visibility");
+                            console.log("lOriginalVisibility = " + lOriginalVisibility);
                             /**
                              * //FIXME
                              * //TODO
@@ -38,14 +39,17 @@ d3.json(testfile, function(data){
                              *  und der != aktuelle checkbox:
                              *  visible = true
                              */
-
+                            var newVIS;
                             o.packets.forEach(function(packet){
                                 if(packet.layers.includes(d)) {
-                                    return d === d ? lVisibility : lOriginalVisibility;
+                                    console.log("d = " + d);
+                                    newVIS = lVisibility;
                                 } else {
-                                    return lOriginalVisibility;
+                                    newVIS = lOriginalVisibility;
                                 }
                             })
+                            console.log("newVIS = " + newVIS);
+                            return newVIS;
                         });
                 });
             d3.select(this).append("span")
@@ -82,12 +86,15 @@ d3.json(testfile, function(data){
                          *  und der != aktuelle checkbox:
                          *  visible = true
                          */
-
-                        if(o.layers.includes(d)) {
-                            return d === d ? lVisibility : lOriginalVisibility;
-                        } else {
-                            return lOriginalVisibility;
-                        }
+                        var newVIS;
+                        o.packets.forEach(function(packet){
+                            if(packet.layers.includes(d)) {
+                                newVIS = lVisibility;
+                            } else {
+                                newVIS = lOriginalVisibility;
+                            }
+                        })
+                        return newVIS;
                     });
                 });
             d3.select(this).append("span")
