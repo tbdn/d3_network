@@ -12,6 +12,37 @@ const svg = d3.select("#networkpanel")
     .attr("width", width)
     .attr("height", height);
 
+var checkVisiblility = function(that, o, d) {
+    var lOriginalVisibility = that.css("visibility");
+    /**
+     * //FIXME
+     * //TODO
+     * ForEach Pseudocode
+     * Alle Layer durchlaufen
+     * Falls einer davon visible
+     *  und der != aktuelle checkbox:
+     *  visible = true
+     */
+    var newVIS;
+
+    var minPercentage = $( "#timeSlider ").slider( "values", 0 )/100;
+    var maxPercentage = $( "#timeSlider" ).slider( "values", 1 )/100;
+    o.packets.some(function(packet){
+        var minTimeBoxed = minTime + minPercentage*timeRange;
+        var maxTimeBoxed = minTime + maxPercentage*timeRange;
+
+        //TODO: 35, 35 funktioniert
+        if(packet.layers.includes(d) && $("#chk_"+d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
+            newVIS = "visible";
+            return true;
+        } else {
+            newVIS = "hidden";
+            return false;
+        }
+    });
+    return newVIS;
+}
+
 d3.json(testfile, function(data){
     // Filter version 2.0
     d3.select(".filterContainerLayer5").selectAll("div")
@@ -32,25 +63,9 @@ d3.json(testfile, function(data){
                     // register on click event
                     var lVisibility = this.checked ? "visible" : "hidden";
                         link.style("visibility", function (o) {
-                            var lOriginalVisibility = $(this).css("visibility");
-                            /**
-                             * //FIXME
-                             * //TODO
-                             * ForEach Pseudocode
-                             * Alle Layer durchlaufen
-                             * Falls einer davon visible
-                             *  und der != aktuelle checkbox:
-                             *  visible = true
-                             */
-                            var newVIS;
-                            o.packets.forEach(function(packet){
-                                if(packet.layers.includes(d)) {
-                                    newVIS = lVisibility;
-                                } else {
-                                    newVIS = lOriginalVisibility;
-                                }
-                            })
-                            return newVIS;
+                            var that = $(this);
+                            var newValue = checkVisiblility(that, o, d);
+                            return newValue;
                         });
                 });
             d3.select(this).append("span")
@@ -77,39 +92,9 @@ d3.json(testfile, function(data){
                     // register on click event
                     var lVisibility = this.checked ? "visible" : "hidden";
                     link.style("visibility", function (o) {
-                        var lOriginalVisibility = $(this).css("visibility");
-                        /**
-                         * //FIXME
-                         * //TODO
-                         * ForEach Pseudocode
-                         * Alle Layer durchlaufen
-                         * Falls einer davon visible
-                         *  und der != aktuelle checkbox:
-                         *  visible = true
-                         */
-                        var newVIS;
-
-                        var minPercentage = $( "#timeSlider ").slider( "values", 0 )/100;
-                        var maxPercentage = $( "#timeSlider" ).slider( "values", 1 )/100;
-                        console.log("minPercentage: "+minPercentage);
-                        console.log("maxPercentage: "+maxPercentage);
-                        console.log("minTime: "+minTime);
-                        console.log("maxTime: "+maxTime);
-                        o.packets.some(function(packet){
-                            var minTimeBoxed = minTime + minPercentage*timeRange;
-                            var maxTimeBoxed = minTime + maxPercentage*timeRange;
-
-
-                            //TODO: 35, 35 funktioniert
-                            if(packet.layers.includes(d) && $("#chk_"+d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
-                                newVIS = "visible";
-                                return true;
-                            } else {
-                                newVIS = "hidden";
-                                return false;
-                            }
-                        });
-                        return newVIS;
+                        var that = $(this);
+                        var newValue = checkVisiblility(that, o, d);
+                        return newValue;
                     });
                 });
             d3.select(this).append("span")
