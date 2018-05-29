@@ -15,15 +15,6 @@ const svg = d3.select("#networkpanel")
 
 var checkVisiblility = function(that, o, d) {
     var lOriginalVisibility = that.css("visibility");
-    /**
-     * //FIXME
-     * //TODO
-     * ForEach Pseudocode
-     * Alle Layer durchlaufen
-     * Falls einer davon visible
-     *  und der != aktuelle checkbox:
-     *  visible = true
-     */
     var newVIS;
 
     var minPercentage = $( "#timeSlider ").slider( "values", 0 )/100;
@@ -63,11 +54,11 @@ d3.json(packets, function(data){
                 .on("click", function (d, i) {
                     // register on click event
                     var lVisibility = this.checked ? "visible" : "hidden";
-                        link.style("visibility", function (o) {
-                            var that = $(this);
-                            var newValue = checkVisiblility(that, o, d);
-                            return newValue;
-                        });
+                    link.style("visibility", function (o) {
+                        var that = $(this);
+                        var newValue = checkVisiblility(that, o, d);
+                        return newValue;
+                    });
                 });
             d3.select(this).append("span")
                 .text(function (d) {
@@ -87,6 +78,19 @@ d3.json(packets, function(data){
     };
 
     $("#clickme").click(dingdong);
+
+    $("#timeSlider").slider({
+        slide: function() {
+            d3.select("#networkpanel").selectAll("line")
+                .each(function (d) {
+                     link.style("visibility", function (o) {
+                             var that = $(this);
+                             var newValue = checkVisiblility(that, o, d);
+                             return newValue;
+                         });
+                });
+        }
+    })
 
     d3.select(".filterContainerLayer4").selectAll("div")
         .data(["icmp", "tcp", "udp"])
