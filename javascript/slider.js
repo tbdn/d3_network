@@ -4,7 +4,7 @@ $( function() {
         range: true,
         min: 0,
         max: 100,
-        values: [ 30, 70 ],
+        values: [ 0, 100 ],
         slide: function( event, ui ) {
             $( "#slider_range" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
         }
