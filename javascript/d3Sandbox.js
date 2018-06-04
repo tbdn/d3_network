@@ -1,6 +1,11 @@
 var testfile = "../data/testfile.json";
 var packets = "../data/packets.json";
 
+var minTime = null;
+var maxTime = null;
+var showLocals = false;
+var timeRange;
+
 const width = document.getElementById("networkpanel").clientWidth;
 const height = document.getElementById("networkpanel").clientHeight;
 const svg = d3.select("#networkpanel")
@@ -8,10 +13,32 @@ const svg = d3.select("#networkpanel")
     .attr("width", width)
     .attr("height", height);
 
-d3.json(testfile, function(data){
+var checkVisiblility = function(that, o, d) {
+    var lOriginalVisibility = that.css("visibility");
+    var newVIS;
+
+    var minPercentage = $( "#timeSlider ").slider( "values", 0 )/100;
+    var maxPercentage = $( "#timeSlider" ).slider( "values", 1 )/100;
+    o.packets.some(function(packet){
+        var minTimeBoxed = minTime + minPercentage*timeRange;
+        var maxTimeBoxed = minTime + maxPercentage*timeRange;
+
+        //TODO: 35, 35 funktioniert
+        if(packet.layers.includes(d) && $("#chk_"+d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
+            newVIS = "visible";
+            return true;
+        } else {
+            newVIS = "hidden";
+            return false;
+        }
+    });
+    return newVIS;
+}
+
+d3.json(packets, function(data){
     // Filter version 2.0
     d3.select(".filterContainerLayer5").selectAll("div")
-        .data(["dns", "http", "ftp", "lol"])
+        .data(["dns", "http", "ftp", "frame"])
         .enter()
         .append("div")
         .attr("class", "checkbox-container")
@@ -27,32 +54,43 @@ d3.json(testfile, function(data){
                 .on("click", function (d, i) {
                     // register on click event
                     var lVisibility = this.checked ? "visible" : "hidden";
-                        link.style("visibility", function (o) {
-                            var lOriginalVisibility = $(this).css("visibility");
-                            /**
-                             * //FIXME
-                             * //TODO
-                             * ForEach Pseudocode
-                             * Alle Layer durchlaufen
-                             * Falls einer davon visible
-                             *  und der != aktuelle checkbox:
-                             *  visible = true
-                             */
-
-                            o.packets.forEach(function(packet){
-                                if(packet.layers.includes(d)) {
-                                    return d === d ? lVisibility : lOriginalVisibility;
-                                } else {
-                                    return lOriginalVisibility;
-                                }
-                            })
-                        });
+                    link.style("visibility", function (o) {
+                        var that = $(this);
+                        var newValue = checkVisiblility(that, o, d);
+                        return newValue;
+                    });
                 });
             d3.select(this).append("span")
                 .text(function (d) {
                     return d;
                 });
         });
+
+    var dingdong = function(){
+        showLocals = !showLocals;
+        d3.select("#networkpanel").selectAll(".node").each(function (n) {
+            if(n.local && showLocals){
+                d3.select(this).select("circle").attr("style","fill: lime");
+            }else{
+                d3.select(this).select("circle").attr("style","");
+            }
+        });
+    };
+
+    $("#clickme").click(dingdong);
+
+    $("#timeSlider").slider({
+        slide: function() {
+            d3.select("#networkpanel").selectAll("line")
+                .each(function (d) {
+                     link.style("visibility", function (o) {
+                             var that = $(this);
+                             var newValue = checkVisiblility(that, o, d);
+                             return newValue;
+                         });
+                });
+        }
+    })
 
     d3.select(".filterContainerLayer4").selectAll("div")
         .data(["icmp", "tcp", "udp"])
@@ -72,22 +110,9 @@ d3.json(testfile, function(data){
                     // register on click event
                     var lVisibility = this.checked ? "visible" : "hidden";
                     link.style("visibility", function (o) {
-                        var lOriginalVisibility = $(this).css("visibility");
-                        /**
-                         * //FIXME
-                         * //TODO
-                         * ForEach Pseudocode
-                         * Alle Layer durchlaufen
-                         * Falls einer davon visible
-                         *  und der != aktuelle checkbox:
-                         *  visible = true
-                         */
-
-                        if(o.layers.includes(d)) {
-                            return d === d ? lVisibility : lOriginalVisibility;
-                        } else {
-                            return lOriginalVisibility;
-                        }
+                        var that = $(this);
+                        var newValue = checkVisiblility(that, o, d);
+                        return newValue;
                     });
                 });
             d3.select(this).append("span")
@@ -118,7 +143,15 @@ d3.json(testfile, function(data){
                         classes = classes + " " + elem;
                     }
                 });
+                packet.timestamp = parseFloat(packet.timestamp);
+                if(minTime == null || packet.timestamp < minTime){
+                    minTime = packet.timestamp;
+                }
+                if(maxTime == null || packet.timestamp > maxTime){
+                    maxTime = packet.timestamp;
+                }
             });
+            timeRange = maxTime-minTime;
             return classes;
         });
 
@@ -145,7 +178,7 @@ d3.json(testfile, function(data){
 
     node.append("text")
         .attr("class", "nodetext")
-        .text(function(d) { return d.name; });
+        .text(function(d) { return d.ip; });
 
     // define what to do one each tick of the animation
     force.on("tick", function() {

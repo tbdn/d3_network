@@ -1,7 +1,8 @@
 {
   "nodes": [
     {
-      "ip": "1.1.1.1"
+      "ip": "1.1.1.1",
+      "local": true
     },
     {
       "ip": "2.2.2.2"
@@ -29,6 +30,26 @@
     }
   ],
   "links": [
+    {
+      "source": 4,
+      "target": 7,
+      "srcIP": "195.115.218.108",
+      "dstIP": "172.16.112.149",
+      "srcMAC": "00:c0:4f:a3:58:23",
+      "dstMAC": "00:00:0c:04:41:bc",
+      "packets": [
+        {
+          "layers": [
+            "frame",
+            "eth",
+            "ip",
+            "udp",
+            "ntp"
+          ],
+          "timestamp": "898765130.389626"
+        }
+      ]
+    },
     {
       "source": 0,
       "target": 1,
