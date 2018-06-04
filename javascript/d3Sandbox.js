@@ -13,19 +13,6 @@ const svg = d3.select("#networkpanel")
     .attr("width", width)
     .attr("height", height);
 
-var showLocalNodes = function(){
-    showLocals = !showLocals;
-    d3.select("#networkpanel").selectAll(".node").each(function (n) {
-        if(n.local && showLocals){
-            d3.select(this).select("circle").attr("style","fill: lime");
-        }else{
-            d3.select(this).select("circle").attr("style","");
-        }
-    });
-};
-
-$("#btn_showLocalNodes").click(showLocalNodes);
-
 var checkVisiblility = function(that, o, d) {
     var lOriginalVisibility = that.css("visibility");
     var newVIS;
@@ -48,7 +35,20 @@ var checkVisiblility = function(that, o, d) {
     return newVIS;
 }
 
+$("#btn_showLocalNodes").click(function(e){
+        e.preventDefault();
+        showLocals = !showLocals;
+        d3.select("#networkpanel").selectAll(".node").each(function (n) {
+            if(n.local && showLocals){
+                d3.select(this).select("circle").attr("style","fill: lime");
+            }else{
+                d3.select(this).select("circle").attr("style","");
+            }
+        });
+    });
+
 d3.json(packets, function(data){
+
     // Filter version 2.0
     d3.select(".filterContainerLayer5").selectAll("div")
         .data(["dns", "http", "ftp", "frame"])
