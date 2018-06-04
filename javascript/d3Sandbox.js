@@ -13,7 +13,8 @@ const svg = d3.select("#networkpanel")
     .attr("width", width)
     .attr("height", height);
 
-var checkVisiblility = function(that, o, d) {
+var checkVisiblility = function(that, o, d, type) {
+
     var lOriginalVisibility = that.css("visibility");
     var newVIS;
 
@@ -24,12 +25,22 @@ var checkVisiblility = function(that, o, d) {
         var maxTimeBoxed = minTime + maxPercentage*timeRange;
 
         //TODO: 35, 35 funktioniert
-        if(packet.layers.includes(d) && $("#chk_"+d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
-            newVIS = "visible";
-            return true;
-        } else {
-            newVIS = "hidden";
-            return false;
+        if(type === "checkbox") {
+            if(packet.layers.includes(d) && $("#chk_"+d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
+                newVIS = "visible";
+                return true;
+            } else {
+                newVIS = "hidden";
+                return false;
+            }
+        } else if(type === "slider") {
+            if(packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
+                newVIS = "visible";
+                return true;
+            } else {
+                newVIS = "hidden";
+                return false;
+            }
         }
     });
     return newVIS;
@@ -69,7 +80,7 @@ d3.json(packets, function(data){
                     var lVisibility = this.checked ? "visible" : "hidden";
                     link.style("visibility", function (o) {
                         var that = $(this);
-                        var newValue = checkVisiblility(that, o, d);
+                        var newValue = checkVisiblility(that, o, d, "checkbox");
                         return newValue;
                     });
                 });
@@ -78,19 +89,6 @@ d3.json(packets, function(data){
                     return d;
                 });
         });
-
-    $("#timeSlider").slider({
-        slide: function() {
-            d3.select("#networkpanel").selectAll("line")
-                .each(function (d) {
-                     link.style("visibility", function (o) {
-                             var that = $(this);
-                             var newValue = checkVisiblility(that, o, d);
-                             return newValue;
-                         });
-                });
-        }
-    })
 
     d3.select(".filterContainerLayer4").selectAll("div")
         .data(["icmp", "tcp", "udp"])
@@ -111,7 +109,7 @@ d3.json(packets, function(data){
                     var lVisibility = this.checked ? "visible" : "hidden";
                     link.style("visibility", function (o) {
                         var that = $(this);
-                        var newValue = checkVisiblility(that, o, d);
+                        var newValue = checkVisiblility(that, o, d, "checkbox");
                         return newValue;
                     });
                 });
@@ -191,7 +189,25 @@ d3.json(packets, function(data){
             return "translate(" + d.x + ", " + d.y + ")";
         });
     });
-
     // bind the drag interaction to the nodes
     node.call(force.drag);
+
+    $("#timeSlider").slider({
+            range: true,
+            min: 0,
+            max: 100,
+            values: [ 0, 100 ],
+            slide: function(event, ui) {
+            $( "#slider_range" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+            d3.select("#networkpanel").selectAll("line")
+                .each(function (d) {
+                     link.style("visibility", function (o) {
+                             var that = $(this);
+                             var newValue = checkVisiblility(that, o, d, "slider");
+                             return newValue;
+                         });
+                });
+            }
+        });
+
 });
