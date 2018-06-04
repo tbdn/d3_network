@@ -1,10 +1,10 @@
 var testfile = "../data/testfile.json";
 var packets = "../data/packets.json";
 
-var minTime = null;
-var maxTime = null;
-var showLocals = false;
-var timeRange;
+let minTime = null;
+let maxTime = null;
+let showLocals = false;
+let timeRange;
 
 const width = document.getElementById("networkpanel").clientWidth;
 const height = document.getElementById("networkpanel").clientHeight;
@@ -15,14 +15,14 @@ const svg = d3.select("#networkpanel")
 
 var checkVisiblility = function(that, o, d, type) {
 
-    var lOriginalVisibility = that.css("visibility");
-    var newVIS;
+    let lOriginalVisibility = that.css("visibility");
+    let newVIS;
 
-    var minPercentage = $( "#timeSlider ").slider( "values", 0 )/100;
-    var maxPercentage = $( "#timeSlider" ).slider( "values", 1 )/100;
+    let minPercentage = $( "#timeSlider ").slider( "values", 0 )/100;
+    let maxPercentage = $( "#timeSlider" ).slider( "values", 1 )/100;
     o.packets.some(function(packet){
-        var minTimeBoxed = minTime + minPercentage*timeRange;
-        var maxTimeBoxed = minTime + maxPercentage*timeRange;
+        let minTimeBoxed = minTime + minPercentage*timeRange;
+        let maxTimeBoxed = minTime + maxPercentage*timeRange;
 
         //TODO: 35, 35 funktioniert
         if(type === "checkbox") {
