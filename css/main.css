@@ -1,6 +1,11 @@
 /**
     Styling: General Network Panel
  */
+#btn_showLocalNodes {
+  width: 100%;
+  height: 2.5em;
+}
+
 #networkpanel {
   float: left;
   width: 1500px;
