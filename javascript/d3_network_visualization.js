@@ -13,10 +13,8 @@ const svg = d3.select("#networkpanel")
     .attr("width", width)
     .attr("height", height);
 
-var checkVisiblility = function(that, o, d, type) {
-    let lOriginalVisibility = that.css("visibility");
-    let newVIS = lOriginalVisibility;
-
+let checkVisiblility = function(that, o, d, type) {
+    let newVIS = that.css("visibility");
     let minPercentage = $( "#timeSlider ").slider( "values", 0 )/100;
     let maxPercentage = $( "#timeSlider" ).slider( "values", 1 )/100;
     o.packets.some(function(packet){
@@ -57,8 +55,6 @@ $("#btn_showLocalNodes").click(function(e){
     });
 
 d3.json(packets, function(data){
-
-    // Filter version 2.0
     d3.select(".filterContainerLayer5").selectAll("div")
         .data(["dns", "http", "ftp", "frame"])
         .enter()
