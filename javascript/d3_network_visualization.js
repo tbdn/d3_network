@@ -191,7 +191,7 @@ d3.json(packets, function(data){
     });
     // bind the drag interaction to the nodes
     node.call(force.drag);
-
+    // Initial code from http://jqueryui.com/slider/#range
     $("#timeSlider").slider({
             range: true,
             min: 0,

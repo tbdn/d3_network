@@ -1,4 +1,4 @@
-// Code from http://jqueryui.com/slider/#range
+
 $( function() {
     $( "#timeSlider" ).slider({
         range: true,
