@@ -14,9 +14,8 @@ const svg = d3.select("#networkpanel")
     .attr("height", height);
 
 var checkVisiblility = function(that, o, d, type) {
-
     let lOriginalVisibility = that.css("visibility");
-    let newVIS;
+    let newVIS = lOriginalVisibility;
 
     let minPercentage = $( "#timeSlider ").slider( "values", 0 )/100;
     let maxPercentage = $( "#timeSlider" ).slider( "values", 1 )/100;
@@ -24,7 +23,6 @@ var checkVisiblility = function(that, o, d, type) {
         let minTimeBoxed = minTime + minPercentage*timeRange;
         let maxTimeBoxed = minTime + maxPercentage*timeRange;
 
-        //TODO: 35, 35 funktioniert
         if(type === "checkbox") {
             if(packet.layers.includes(d) && $("#chk_"+d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
                 newVIS = "visible";
@@ -44,7 +42,7 @@ var checkVisiblility = function(that, o, d, type) {
         }
     });
     return newVIS;
-}
+};
 
 $("#btn_showLocalNodes").click(function(e){
         e.preventDefault();
@@ -76,12 +74,8 @@ d3.json(packets, function(data){
                 })
                 .attr("checked", true)
                 .on("click", function (d, i) {
-                    // register on click event
-                    var lVisibility = this.checked ? "visible" : "hidden";
                     link.style("visibility", function (o) {
-                        var that = $(this);
-                        var newValue = checkVisiblility(that, o, d, "checkbox");
-                        return newValue;
+                       return checkVisiblility($(this), o, d, "checkbox");
                     });
                 });
             d3.select(this).append("span")
@@ -105,12 +99,8 @@ d3.json(packets, function(data){
                 })
                 .attr("checked", true)
                 .on("click", function (d, i) {
-                    // register on click event
-                    var lVisibility = this.checked ? "visible" : "hidden";
                     link.style("visibility", function (o) {
-                        var that = $(this);
-                        var newValue = checkVisiblility(that, o, d, "checkbox");
-                        return newValue;
+                        return checkVisiblility($(this), o, d, "checkbox");
                     });
                 });
             d3.select(this).append("span")
