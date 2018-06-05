@@ -192,9 +192,7 @@ d3.json(packets, function(data){
             d3.select("#networkpanel").selectAll("line")
                 .each(function (d) {
                      link.style("visibility", function (o) {
-                             var that = $(this);
-                             var newValue = checkVisiblility(that, o, d, "slider");
-                             return newValue;
+                             return checkVisiblility($(this), o, d, "slider");
                          });
                 });
             }
