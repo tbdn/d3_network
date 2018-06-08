@@ -36,7 +36,7 @@ let checkVisiblility = function(that, o, d, type) {
             }
         } else if(type === "slider") {
             if(packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
-                d.packets[0].layers.some(function (layer) {
+                return d.packets[0].layers.some(function (layer) {
                     let checkbox = $("#chk_"+layer).filter("[type='checkbox']");
                     if(checkbox.length === 1) {
                         if(checkbox[0].checked) {
