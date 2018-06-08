@@ -15,6 +15,12 @@ const svg = d3.select("#networkpanel")
 
 let checkVisiblility = function(that, o, d, type, sliderMin, sliderMax) {
     let newVIS = that.css("visibility");
+    if(sliderMin == null) {
+        sliderMin = $( "#timeSlider" ).slider( "values", 0 );
+    }
+    if(sliderMax == null) {
+        sliderMax = $( "#timeSlider" ).slider( "values", 1 );
+    }
     let minPercentage = sliderMin/100;
     let maxPercentage = sliderMax/100;
     o.packets.some(function(packet){
@@ -83,7 +89,7 @@ d3.json(packets, function(data){
                 .attr("checked", true)
                 .on("click", function (d, i) {
                     link.style("visibility", function (o) {
-                       return checkVisiblility($(this), o, d, "checkbox");
+                       return checkVisiblility($(this), o, d, "checkbox", null, null);
                     });
                 });
             d3.select(this).append("span")
@@ -108,7 +114,7 @@ d3.json(packets, function(data){
                 .attr("checked", true)
                 .on("click", function (d, i) {
                     link.style("visibility", function (o) {
-                        return checkVisiblility($(this), o, d, "checkbox");
+                        return checkVisiblility($(this), o, d, "checkbox", null, null);
                     });
                 });
             d3.select(this).append("span")
