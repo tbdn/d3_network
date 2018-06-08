@@ -96,7 +96,7 @@ d3.json(packets, function(data){
         });
 
     d3.select(".filterContainerLayer4").selectAll("div")
-        .data(["icmp", "tcp", "udp"])
+        .data(["icmp", "tcp", "udp", "smtp", "snpm"])
         .enter()
         .append("div")
         .attr("class", "checkbox-container")
