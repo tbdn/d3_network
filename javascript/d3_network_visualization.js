@@ -22,12 +22,18 @@ let checkVisiblility = function(that, o, d, type) {
         let maxTimeBoxed = minTime + maxPercentage*timeRange;
 
         if(type === "checkbox") {
-            if(packet.layers.includes(d) && $("#chk_"+d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
-                newVIS = "visible";
-                return true;
+            if(packet.layers.includes(d)) {
+                if($("#chk_"+d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
+                    console.log(packets.layers.includes(d));
+                    console.log(d);
+                    newVIS = "visible";
+                    return true;
+                } else {
+                    newVIS = "hidden";
+                    return false;
+                }
             } else {
-                newVIS = "hidden";
-                return false;
+                return true;
             }
         } else if(type === "slider") {
             if(packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
