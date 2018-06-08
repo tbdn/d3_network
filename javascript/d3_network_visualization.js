@@ -6,9 +6,6 @@ let maxTime = null;
 let showLocals = false;
 let timeRange;
 
-//DEBUG
-let count = 0;
-
 const width = document.getElementById("networkpanel").clientWidth;
 const height = document.getElementById("networkpanel").clientHeight;
 const svg = d3.select("#networkpanel")
@@ -20,7 +17,6 @@ let checkVisiblility = function(that, o, d, type, sliderMin, sliderMax) {
     let newVIS = that.css("visibility");
     let minPercentage = sliderMin/100;
     let maxPercentage = sliderMax/100;
-    console.log(minPercentage);
     o.packets.some(function(packet){
         let minTimeBoxed = minTime + minPercentage*timeRange;
         let maxTimeBoxed = minTime + maxPercentage*timeRange;
