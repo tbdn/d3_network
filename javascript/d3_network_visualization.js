@@ -1,4 +1,3 @@
-var testfile = "../data/testfile.json";
 var packets = "../data/packets.json";
 
 let minTime = null;
@@ -13,6 +12,11 @@ const svg = d3.select("#networkpanel")
     .attr("width", width)
     .attr("height", height);
 
+
+/**
+ * Check the Visibility of edges
+ * - Triggered through Checkbox select and slider update
+ */
 let checkVisiblility = function(that, o, d, type, sliderMin, sliderMax) {
     let newVIS = that.css("visibility");
     if(sliderMin == null) {
@@ -59,7 +63,9 @@ let checkVisiblility = function(that, o, d, type, sliderMin, sliderMax) {
     });
     return newVIS;
 };
-
+/**
+ * Button to display the local nodes (by IP) with different color
+ */
 $("#btn_showLocalNodes").click(function(e){
         e.preventDefault();
         showLocals = !showLocals;
@@ -73,6 +79,10 @@ $("#btn_showLocalNodes").click(function(e){
     });
 
 d3.json(packets, function(data){
+    /**
+     * Checkbox - Layer 5
+     * DNS, HTTP, FTP, Frame
+     */
     d3.select(".filterContainerLayer5").selectAll("div")
         .data(["dns", "http", "ftp", "frame"])
         .enter()
@@ -98,6 +108,10 @@ d3.json(packets, function(data){
                 });
         });
 
+    /**
+     * Checkbox - Layer 4
+     * ICMP, TCP, UDP, SMTP, SNMP
+     */
     d3.select(".filterContainerLayer4").selectAll("div")
         .data(["icmp", "tcp", "udp", "smtp", "snpm"])
         .enter()
@@ -123,7 +137,9 @@ d3.json(packets, function(data){
                 });
         });
 
-    // create the layout
+    /**
+     * Create the force directed graph layout
+     */
     var force = d3.layout.force()
         .charge(-200)
         .linkDistance(20)
@@ -132,7 +148,9 @@ d3.json(packets, function(data){
         .links(data.links)
         .start();
 
-    // draw the graph edges
+    /**
+     * Draw the graph edges
+     */
     var link = svg.selectAll(".link")
         .data(data.links)
         .enter()
@@ -157,32 +175,49 @@ d3.json(packets, function(data){
             return classes;
         });
 
-    // draw the graph nodes
+    /**
+     * Draw the graph nodes
+     */
     var node = svg.selectAll(".node")
         .data(data.nodes)
         .enter()
         .append("g")
         .attr("class", "node");
 
+    /**
+     * Set the edge titles (hover)
+     */
     link.append("title")
         .text(function(d) {
             return "source: " + d.source.ip + "\n" + "target: " + d.target.ip;
         });
 
+    /**
+     * Set the node titles (hover)
+     */
     node.append("title")
         .text(function (d) {
             return "ip: " + d.ip;
         });
 
+    /**
+     * Define the node shape
+     */
     node.append("circle")
         .attr("class", "nodeshape")
         .attr("r", 5);
 
+    /**
+     * Set the node text
+     */
     node.append("text")
         .attr("class", "nodetext")
         .text(function(d) { return d.ip; });
 
-    // define what to do one each tick of the animation
+    /**
+     * Define the animation (force directed)
+     * pull / push nodes
+     */
     force.on("tick", function() {
         link.attr("x1", function(d) { return d.source.x; })
             .attr("y1", function(d) { return d.source.y; })
@@ -193,14 +228,24 @@ d3.json(packets, function(data){
             return "translate(" + d.x + ", " + d.y + ")";
         });
     });
-    // bind the drag interaction to the nodes
+
+    /**
+     * Bind the drag interaction to the nodes
+     */
     node.call(force.drag);
-    // Initial code from http://jqueryui.com/slider/#range
+
+    /**
+     * Create the slider
+     * Initial code from http://jqueryui.com/slider/#range
+     */
     $("#timeSlider").slider({
             range: true,
             min: 0,
             max: 100,
             values: [ 0, 100 ],
+            /**
+             * Define the slide event
+             */
             slide: function(event, ui) {
             $( "#slider_range" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
             d3.select("#networkpanel").selectAll("line")
@@ -211,5 +256,4 @@ d3.json(packets, function(data){
                 });
             }
         });
-
 });
