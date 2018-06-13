@@ -3,16 +3,21 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>D3 Network Graph - Project Task</title>
+    <!-- d3 lib -->
     <script type="text/javascript" src="../javascript/lib/d3.js"></script>
+    <!-- jQuery 3.3.1 lib -->
     <script type="text/javascript" src="../javascript/lib/jquery-3.3.1.min.js"></script>
+    <!-- jQuery UI lib -->
     <script type="text/javascript" src="../javascript/lib/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
 
+<!-- DIV to display the whole network panel graph -->
 <div id="networkpanel"> </div>
 
+<!-- Form to display the filter checkboxes -->
 <form id="form_filter">
     <h3>Choose your filter options:</h3>
     <fieldset>
@@ -31,15 +36,16 @@
     <button id="btn_showLocalNodes">Show local nodes</button>
 </form>
 
+<!-- DIV to display the filter Slider -->
 <div id="slidecontainer">
     <p id="timeSlider_label">
         <label for="slider_range">Time range:</label>
         <input type="text" id="slider_range" readonly>
     </p>
-
     <div id="timeSlider"> </div>
 </div>
 
+<!-- d3 visualization file -->
 <script src="../javascript/d3_network_visualization.js"></script>
 </body>
 </html>
