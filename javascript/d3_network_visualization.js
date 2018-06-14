@@ -47,7 +47,7 @@ let setCategory = function (layer, checked) {
  * Check the Visibility of edges
  * - Triggered through Checkbox select and slider update
  */
-let checkVisiblility = function (that, linkObject, domLINK, sliderMin, sliderMax) {
+let checkVisiblility = function (that, linkObject, layerName, sliderMin, sliderMax) {
     let newVIS = "hidden";
     if (sliderMin == null) {
         sliderMin = $("#timeSlider").slider("values", 0);
@@ -102,15 +102,15 @@ d3.json(packets, function (data) {
             .attr("class", "checkbox-container")
             .append("div")
             .attr("class", "layer" + layerNumber)
-            .each(function (domLINK) {
+            .each(function (d) {
                 // create checkbox for each data
                 d3.select(this).append("input")
                     .attr("type", "checkbox")
-                    .attr("id", function (domLINK) {
-                        return "chk_" + domLINK;
+                    .attr("id", function (layerName) {
+                        return "chk_" + layerName;
                     })
-                    .on("click", function (domLINK, i) {
-                        let checkbox = $("#chk_" + domLINK).filter("[type='checkbox']");
+                    .on("click", function (layerName, i) {
+                        let checkbox = $("#chk_" + layerName).filter("[type='checkbox']");
                         if (checkbox[0].checked) {
                             checkbox.attr("checked", true);
                             setCategory(layerNumber, false);
@@ -119,12 +119,12 @@ d3.json(packets, function (data) {
                         }
                         updateAllLinks();
                         link.style("visibility", function (linkObject) {
-                            return checkVisiblility($(this), linkObject, domLINK, null, null);
+                            return checkVisiblility($(this), linkObject, layerName, null, null);
                         });
                     });
                 d3.select(this).append("span")
-                    .text(function (domLINK) {
-                        return domLINK;
+                    .text(function (layerName) {
+                        return layerName;
                     });
             });
     };
