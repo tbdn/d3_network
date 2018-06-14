@@ -123,15 +123,12 @@ d3.json(packets, function (data) {
                         if (checkbox[0].checked) {
                             checkbox.attr("checked", true);
                             setCategory(layerNumber, false);
-                            link.style("visibility", function (o) {
-                                return checkVisiblility($(this), o, d, "checkbox", null, null);
-                            });
                         } else {
                             checkbox.attr("checked", false);
-                            link.style("visibility", function (o) {
-                                return checkVisiblility($(this), o, d, "checkbox", null, null);
-                            });
                         }
+                        link.style("visibility", function (o) {
+                            return checkVisiblility($(this), o, d, "checkbox", null, null);
+                        });
                     });
                 d3.select(this).append("span")
                     .text(function (d) {
