@@ -20,7 +20,7 @@ let updateAllLinks = function () {
     d3.select("#networkpanel").selectAll("line")
         .each(function (d) {
             svg.selectAll(".link").style("visibility", function (o) {
-                return checkVisiblility($(this), o, d, "checkbox", null, null);
+                return checkVisiblility($(this), o, d, null, null);
             });
         });
 };
@@ -47,7 +47,7 @@ let setCategory = function (layer, checked) {
  * Check the Visibility of edges
  * - Triggered through Checkbox select and slider update
  */
-let checkVisiblility = function (that, linkObject, layerName, type, sliderMin, sliderMax) {
+let checkVisiblility = function (that, linkObject, domLINK, sliderMin, sliderMax) {
     let newVIS = "hidden";
     if (sliderMin == null) {
         sliderMin = $("#timeSlider").slider("values", 0);
@@ -60,36 +60,15 @@ let checkVisiblility = function (that, linkObject, layerName, type, sliderMin, s
     linkObject.packets.some(function (packet) {
         let minTimeBoxed = minTime + minPercentage * timeRange;
         let maxTimeBoxed = minTime + maxPercentage * timeRange;
-
-        if (type === "checkbox") {
-            packet.layers.forEach(function (layer) {
-                let checkbox = $("#chk_" + layer)[0];
-                if (checkbox) {
-                    if (checkbox.checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
-                        newVIS = "visible";
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
-        } else if (type === "slider") {
-            if (packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
-                return layerName.packets[0].layers.some(function (layer) {
-                    let checkbox = $("#chk_" + layer).filter("[type='checkbox']");
-                    if (checkbox.length === 1) {
-                        if (checkbox[0].checked) {
-                            newVIS = "visible";
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                });
+        packet.layers.forEach(function (layer) {
+            let checkbox = $("#chk_" + layer)[0];
+            if (checkbox && checkbox.checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
+                newVIS = "visible";
+                return true;
             } else {
                 return false;
             }
-        }
+        });
     });
     return newVIS;
 };
@@ -123,15 +102,15 @@ d3.json(packets, function (data) {
             .attr("class", "checkbox-container")
             .append("div")
             .attr("class", "layer" + layerNumber)
-            .each(function (layerName) {
+            .each(function (domLINK) {
                 // create checkbox for each data
                 d3.select(this).append("input")
                     .attr("type", "checkbox")
-                    .attr("id", function (layerName) {
-                        return "chk_" + layerName;
+                    .attr("id", function (domLINK) {
+                        return "chk_" + domLINK;
                     })
-                    .on("click", function (layerName, i) {
-                        let checkbox = $("#chk_" + layerName).filter("[type='checkbox']");
+                    .on("click", function (domLINK, i) {
+                        let checkbox = $("#chk_" + domLINK).filter("[type='checkbox']");
                         if (checkbox[0].checked) {
                             checkbox.attr("checked", true);
                             setCategory(layerNumber, false);
@@ -140,12 +119,12 @@ d3.json(packets, function (data) {
                         }
                         updateAllLinks();
                         link.style("visibility", function (linkObject) {
-                            return checkVisiblility($(this), linkObject, layerName, "checkbox", null, null);
+                            return checkVisiblility($(this), linkObject, domLINK, null, null);
                         });
                     });
                 d3.select(this).append("span")
-                    .text(function (layerName) {
-                        return layerName;
+                    .text(function (domLINK) {
+                        return domLINK;
                     });
             });
     };
@@ -283,7 +262,7 @@ d3.json(packets, function (data) {
             d3.select("#networkpanel").selectAll("line")
                 .each(function (d) {
                     link.style("visibility", function (o) {
-                        return checkVisiblility($(this), o, d, "slider", ui.values[0], ui.values[1]);
+                        return checkVisiblility($(this), o, d, ui.values[0], ui.values[1]);
                     });
                 });
         }
