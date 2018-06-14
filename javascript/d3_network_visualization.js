@@ -12,6 +12,14 @@ const svg = d3.select("#networkpanel")
     .attr("width", width)
     .attr("height", height);
 
+let setCategory = function(layer, checked){
+    $(".filterContainerLayer"+layer+" input").each(function(index, input){
+        $(input).attr("checked",checked);
+
+    });
+
+
+};
 
 /**
  * Check the Visibility of edges
@@ -98,6 +106,9 @@ d3.json(packets, function(data){
                 })
                 .attr("checked", true)
                 .on("click", function (d, i) {
+                    if($("#chk_"+d).prop('checked')){
+                        setCategory(4,false);
+                    }
                     link.style("visibility", function (o) {
                        return checkVisiblility($(this), o, d, "checkbox", null, null);
                     });
@@ -127,7 +138,9 @@ d3.json(packets, function(data){
                 })
                 .attr("checked", true)
                 .on("click", function (d, i) {
-                    link.style("visibility", function (o) {
+                    if($("#chk_"+d).prop('checked')){
+                        setCategory(5,false);
+                    }link.style("visibility", function (o) {
                         return checkVisiblility($(this), o, d, "checkbox", null, null);
                     });
                 });
