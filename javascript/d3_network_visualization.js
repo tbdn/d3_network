@@ -251,7 +251,7 @@ d3.json(packets, function (data) {
      */
     $("#timeSlider").slider({
         range: true,
-        min: 1,
+        min: 0,
         max: 100,
         values: [10, 80],
         /**
