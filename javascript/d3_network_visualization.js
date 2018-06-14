@@ -191,7 +191,8 @@ d3.json(packets, function (data) {
             });
             timeRange = maxTime - minTime;
             return classes;
-        });
+        })
+        .attr("visibility", "hidden")
 
     /**
      * Draw the graph nodes
