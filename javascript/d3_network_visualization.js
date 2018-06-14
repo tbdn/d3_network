@@ -25,23 +25,23 @@ let setCategory = function(layer, checked){
  * Check the Visibility of edges
  * - Triggered through Checkbox select and slider update
  */
-let checkVisiblility = function(that, o, d, type, sliderMin, sliderMax) {
+let checkVisiblility = function (that, o, d, type, sliderMin, sliderMax) {
     let newVIS = that.css("visibility");
-    if(sliderMin == null) {
-        sliderMin = $( "#timeSlider" ).slider( "values", 0 );
+    if (sliderMin == null) {
+        sliderMin = $("#timeSlider").slider("values", 0);
     }
-    if(sliderMax == null) {
-        sliderMax = $( "#timeSlider" ).slider( "values", 1 );
+    if (sliderMax == null) {
+        sliderMax = $("#timeSlider").slider("values", 1);
     }
-    let minPercentage = sliderMin/100;
-    let maxPercentage = sliderMax/100;
-    o.packets.some(function(packet){
-        let minTimeBoxed = minTime + minPercentage*timeRange;
-        let maxTimeBoxed = minTime + maxPercentage*timeRange;
+    let minPercentage = sliderMin / 100;
+    let maxPercentage = sliderMax / 100;
+    o.packets.some(function (packet) {
+        let minTimeBoxed = minTime + minPercentage * timeRange;
+        let maxTimeBoxed = minTime + maxPercentage * timeRange;
 
-        if(type === "checkbox") {
-            if(packet.layers.includes(d)) {
-                if($("#chk_"+d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
+        if (type === "checkbox") {
+            if (packet.layers.includes(d)) {
+                if ($("#chk_" + d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
                     newVIS = "visible";
                     return true;
                 } else {
@@ -49,12 +49,12 @@ let checkVisiblility = function(that, o, d, type, sliderMin, sliderMax) {
                     return false;
                 }
             }
-        } else if(type === "slider") {
-            if(packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
+        } else if (type === "slider") {
+            if (packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
                 return d.packets[0].layers.some(function (layer) {
-                    let checkbox = $("#chk_"+layer).filter("[type='checkbox']");
-                    if(checkbox.length === 1) {
-                        if(checkbox[0].checked) {
+                    let checkbox = $("#chk_" + layer).filter("[type='checkbox']");
+                    if (checkbox.length === 1) {
+                        if (checkbox[0].checked) {
                             newVIS = "visible";
                             return true;
                         } else {
@@ -74,19 +74,19 @@ let checkVisiblility = function(that, o, d, type, sliderMin, sliderMax) {
 /**
  * Button to display the local nodes (by IP) with different color
  */
-$("#btn_showLocalNodes").click(function(e){
-        e.preventDefault();
-        showLocals = !showLocals;
-        d3.select("#networkpanel").selectAll(".node").each(function (n) {
-            if(n.local && showLocals){
-                d3.select(this).select("circle").attr("style","fill: lime");
-            }else{
-                d3.select(this).select("circle").attr("style","");
-            }
-        });
+$("#btn_showLocalNodes").click(function (e) {
+    e.preventDefault();
+    showLocals = !showLocals;
+    d3.select("#networkpanel").selectAll(".node").each(function (n) {
+        if (n.local && showLocals) {
+            d3.select(this).select("circle").attr("style", "fill: lime");
+        } else {
+            d3.select(this).select("circle").attr("style", "");
+        }
     });
+});
 
-d3.json(packets, function(data){
+d3.json(packets, function (data) {
     /**
      * Checkbox - Layer 5
      * DNS, HTTP, FTP, Frame
@@ -96,7 +96,8 @@ d3.json(packets, function(data){
         .enter()
         .append("div")
         .attr("class", "checkbox-container")
-        .append("label")
+        .append("div")
+        .attr("class", "layer5")
         .each(function (d) {
             // create checkbox for each data
             d3.select(this).append("input")
@@ -104,13 +105,16 @@ d3.json(packets, function(data){
                 .attr("id", function (d) {
                     return "chk_" + d;
                 })
-                .attr("checked", true)
                 .on("click", function (d, i) {
-                    if($("#chk_"+d).prop('checked')){
-                        setCategory(4,false);
+                    let checkbox = $("#chk_" + d).filter("[type='checkbox']");
+                    if (checkbox[0].checked) {
+                        checkbox.attr("checked", true);
+                        setCategory(4, false);
+                    } else {
+                        checkbox.attr("checked", false);
                     }
                     link.style("visibility", function (o) {
-                       return checkVisiblility($(this), o, d, "checkbox", null, null);
+                        return checkVisiblility($(this), o, d, "checkbox", null, null);
                     });
                 });
             d3.select(this).append("span")
@@ -128,7 +132,8 @@ d3.json(packets, function(data){
         .enter()
         .append("div")
         .attr("class", "checkbox-container")
-        .append("label")
+        .append("div")
+        .attr("class", "layer4")
         .each(function (d) {
             // create checkbox for each data
             d3.select(this).append("input")
@@ -136,11 +141,15 @@ d3.json(packets, function(data){
                 .attr("id", function (d) {
                     return "chk_" + d;
                 })
-                .attr("checked", true)
                 .on("click", function (d, i) {
-                    if($("#chk_"+d).prop('checked')){
+                    let checkbox = $("#chk_" + d).filter("[type='checkbox']");
+                    if (checkbox[0].checked) {
+                        checkbox.attr("checked", true);
                         setCategory(5,false);
-                    }link.style("visibility", function (o) {
+                    } else {
+                        checkbox.attr("checked", false);
+                    }
+                    link.style("visibility", function (o) {
                         return checkVisiblility($(this), o, d, "checkbox", null, null);
                     });
                 });
@@ -170,21 +179,21 @@ d3.json(packets, function(data){
         .append("line")
         .attr("class", function (d) {
             var classes = "link";
-            d.packets.forEach(function(packet) {
-                packet.layers.forEach(function(elem){
-                    if(!classes.includes(elem)) {
+            d.packets.forEach(function (packet) {
+                packet.layers.forEach(function (elem) {
+                    if (!classes.includes(elem)) {
                         classes = classes + " " + elem;
                     }
                 });
                 packet.timestamp = parseFloat(packet.timestamp);
-                if(minTime == null || packet.timestamp < minTime){
+                if (minTime == null || packet.timestamp < minTime) {
                     minTime = packet.timestamp;
                 }
-                if(maxTime == null || packet.timestamp > maxTime){
+                if (maxTime == null || packet.timestamp > maxTime) {
                     maxTime = packet.timestamp;
                 }
             });
-            timeRange = maxTime-minTime;
+            timeRange = maxTime - minTime;
             return classes;
         });
 
@@ -201,7 +210,7 @@ d3.json(packets, function(data){
      * Set the edge titles (hover)
      */
     link.append("title")
-        .text(function(d) {
+        .text(function (d) {
             return "source: " + d.source.ip + "\n" + "target: " + d.target.ip;
         });
 
@@ -225,19 +234,19 @@ d3.json(packets, function(data){
      */
     node.append("text")
         .attr("class", "nodetext")
-        .text(function(d) { return d.ip; });
+        .text(function (d) { return d.ip; });
 
     /**
      * Define the animation (force directed)
      * pull / push nodes
      */
-    force.on("tick", function() {
-        link.attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
+    force.on("tick", function () {
+        link.attr("x1", function (d) { return d.source.x; })
+            .attr("y1", function (d) { return d.source.y; })
+            .attr("x2", function (d) { return d.target.x; })
+            .attr("y2", function (d) { return d.target.y; });
 
-        node.attr("transform", function(d) {
+        node.attr("transform", function (d) {
             return "translate(" + d.x + ", " + d.y + ")";
         });
     });
@@ -252,21 +261,21 @@ d3.json(packets, function(data){
      * Initial code from http://jqueryui.com/slider/#range
      */
     $("#timeSlider").slider({
-            range: true,
-            min: 0,
-            max: 100,
-            values: [ 0, 100 ],
-            /**
-             * Define the slide event
-             */
-            slide: function(event, ui) {
-            $( "#slider_range" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+        range: true,
+        min: 1,
+        max: 100,
+        values: [10, 80],
+        /**
+         * Define the slide event
+         */
+        slide: function (event, ui) {
+            $("#slider_range").val(ui.values[0] + " - " + ui.values[1]);
             d3.select("#networkpanel").selectAll("line")
                 .each(function (d) {
-                     link.style("visibility", function (o) {
-                             return checkVisiblility($(this), o, d, "slider", ui.values[ 0 ], ui.values[ 1 ]);
-                         });
+                    link.style("visibility", function (o) {
+                        return checkVisiblility($(this), o, d, "slider", ui.values[0], ui.values[1]);
+                    });
                 });
-            }
-        });
+        }
+    });
 });
