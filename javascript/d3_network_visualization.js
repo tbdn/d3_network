@@ -14,11 +14,8 @@ const svg = d3.select("#networkpanel")
 
 let setCategory = function(layer, checked){
     $(".filterContainerLayer"+layer+" input").each(function(index, input){
-        $(input).attr("checked",checked);
-
+        $(input).prop("checked",checked);
     });
-
-
 };
 
 /**
