@@ -37,7 +37,7 @@ let setCategory = function (layer, checked) {
         if (layer != elem) {
             $(".filterContainerLayer" + elem + " input").each(function (index, input) {
                 $(input).prop("checked", checked);  // Setzen des Hakens der Checkbox
-                $(input).attr("checked", false);    // Setzen des DOM-Attributes der Checkbox
+                $(input).attr("checked", checked);    // Setzen des DOM-Attributes der Checkbox
             });
         }
     })
@@ -63,14 +63,18 @@ let checkVisiblility = function (that, o, d, type, sliderMin, sliderMax) {
         let maxTimeBoxed = minTime + maxPercentage * timeRange;
 
         if (type === "checkbox") {
-            if (packet.layers.includes(d)) {
-                if ($("#chk_" + d)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
-                    newVIS = "visible";
-                    return true;
-                } else {
-                    return false;
+            packet.layers.forEach(function (layer) {
+                {
+                    if ($("#chk_" + layer)[0]) {
+                        if ($("#chk_" + layer)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
+                            newVIS = "visible";
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
                 }
-            }
+            });
         } else if (type === "slider") {
             if (packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
                 return d.packets[0].layers.some(function (layer) {
