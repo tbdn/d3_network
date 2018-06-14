@@ -95,13 +95,8 @@ $("#btn_toggleNodeNames").click(function (e) {
     e.preventDefault();
     showNodeNames = !showNodeNames;
     var node = d3.select("#networkpanel").selectAll(".node");
-    if (showNodeNames) {
-        node.append("text")
-            .attr("class", "nodetext")
-            .text(function (d) { return d.ip; });
-    } else {
-        node.selectAll(".nodetext").text(function (d) { return ""});
-    }
+    node.selectAll(".nodetext").text(function (d) { return showNodeNames?d.ip:"";});
+
 });
 
 
@@ -236,6 +231,12 @@ d3.json(packets, function (data) {
         .attr("class", "nodeshape")
         .attr("r", 5);
 
+    /**
+     * Set node text
+     */
+    node.append("text")
+        .attr("class", "nodetext")
+        .text(function (d) { return "" });
     /**
      * Define the animation (force directed)
      * pull / push nodes
