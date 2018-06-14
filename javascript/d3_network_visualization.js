@@ -4,7 +4,7 @@ let minTime = null;
 let maxTime = null;
 let showLocals = false;
 let timeRange;
-const LAYERS = [2, 4, 7]
+const LAYERS = [2, 4, 7];
 
 const width = document.getElementById("networkpanel").clientWidth;
 const height = document.getElementById("networkpanel").clientHeight;
@@ -20,11 +20,10 @@ let updateAllLinks = function () {
     d3.select("#networkpanel").selectAll("line")
         .each(function (d) {
             svg.selectAll(".link").style("visibility", function (o) {
-                var vis = checkVisiblility($(this), o, d, "checkbox", null, null);
-                return vis;
+                return checkVisiblility($(this), o, d, "checkbox", null, null);
             });
         });
-}
+};
 
 /**
  * Uncheck all Checkboxes from different categories (layers)
@@ -40,7 +39,7 @@ let setCategory = function (layer, checked) {
                 $(input).attr("checked", checked);    // Setzen des DOM-Attributes der Checkbox
             });
         }
-    })
+    });
     updateAllLinks();
 };
 
@@ -48,7 +47,7 @@ let setCategory = function (layer, checked) {
  * Check the Visibility of edges
  * - Triggered through Checkbox select and slider update
  */
-let checkVisiblility = function (that, o, d, type, sliderMin, sliderMax) {
+let checkVisiblility = function (that, linkObject, layerName, type, sliderMin, sliderMax) {
     let newVIS = "hidden";
     if (sliderMin == null) {
         sliderMin = $("#timeSlider").slider("values", 0);
@@ -58,26 +57,25 @@ let checkVisiblility = function (that, o, d, type, sliderMin, sliderMax) {
     }
     let minPercentage = sliderMin / 100;
     let maxPercentage = sliderMax / 100;
-    o.packets.some(function (packet) {
+    linkObject.packets.some(function (packet) {
         let minTimeBoxed = minTime + minPercentage * timeRange;
         let maxTimeBoxed = minTime + maxPercentage * timeRange;
 
         if (type === "checkbox") {
             packet.layers.forEach(function (layer) {
-                {
-                    if ($("#chk_" + layer)[0]) {
-                        if ($("#chk_" + layer)[0].checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
-                            newVIS = "visible";
-                            return true;
-                        } else {
-                            return false;
-                        }
+                let checkbox = $("#chk_" + layer)[0];
+                if (checkbox) {
+                    if (checkbox.checked && packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
+                        newVIS = "visible";
+                        return true;
+                    } else {
+                        return false;
                     }
                 }
             });
         } else if (type === "slider") {
             if (packet.timestamp >= minTimeBoxed && packet.timestamp <= maxTimeBoxed) {
-                return d.packets[0].layers.some(function (layer) {
+                return layerName.packets[0].layers.some(function (layer) {
                     let checkbox = $("#chk_" + layer).filter("[type='checkbox']");
                     if (checkbox.length === 1) {
                         if (checkbox[0].checked) {
@@ -125,15 +123,15 @@ d3.json(packets, function (data) {
             .attr("class", "checkbox-container")
             .append("div")
             .attr("class", "layer" + layerNumber)
-            .each(function (d) {
+            .each(function (layerName) {
                 // create checkbox for each data
                 d3.select(this).append("input")
                     .attr("type", "checkbox")
-                    .attr("id", function (d) {
-                        return "chk_" + d;
+                    .attr("id", function (layerName) {
+                        return "chk_" + layerName;
                     })
-                    .on("click", function (d, i) {
-                        let checkbox = $("#chk_" + d).filter("[type='checkbox']");
+                    .on("click", function (layerName, i) {
+                        let checkbox = $("#chk_" + layerName).filter("[type='checkbox']");
                         if (checkbox[0].checked) {
                             checkbox.attr("checked", true);
                             setCategory(layerNumber, false);
@@ -141,16 +139,16 @@ d3.json(packets, function (data) {
                             checkbox.attr("checked", false);
                         }
                         updateAllLinks();
-                        link.style("visibility", function (o) {
-                            return checkVisiblility($(this), o, d, "checkbox", null, null);
+                        link.style("visibility", function (linkObject) {
+                            return checkVisiblility($(this), linkObject, layerName, "checkbox", null, null);
                         });
                     });
                 d3.select(this).append("span")
-                    .text(function (d) {
-                        return d;
+                    .text(function (layerName) {
+                        return layerName;
                     });
             });
-    }
+    };
 
     /**
          * Checkbox - Layer 7
@@ -207,7 +205,7 @@ d3.json(packets, function (data) {
             timeRange = maxTime - minTime;
             return classes;
         })
-        .attr("visibility", "hidden")
+        .attr("visibility", "hidden");
 
     /**
      * Draw the graph nodes
