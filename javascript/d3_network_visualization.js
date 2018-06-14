@@ -13,13 +13,21 @@ const svg = d3.select("#networkpanel")
     .attr("width", width)
     .attr("height", height);
 
+/**
+ * Uncheck all Checkboxes from different categories (layers)
+ * 
+ * @param {integer} layer 
+ * @param {boolean} checked 
+ */
 let setCategory = function (layer, checked) {
     LAYERS.forEach(function (elem) {
         if (layer != elem) {
             $(".filterContainerLayer" + elem + " input").each(function (index, input) {
+                console.log($(input));
                 $(input).prop("checked", checked);
             });
         }
+        console.log(elem);
     })
 };
 
@@ -91,7 +99,7 @@ $("#btn_showLocalNodes").click(function (e) {
 d3.json(packets, function (data) {
 
     /**
-     * Function to create the checkboxes including the fieldset
+     * Function to create the checkboxes
      * @param {integer} layerNumber 
      * @param {array[string]} data 
      */
@@ -115,12 +123,15 @@ d3.json(packets, function (data) {
                         if (checkbox[0].checked) {
                             checkbox.attr("checked", true);
                             setCategory(layerNumber, false);
+                            link.style("visibility", function (o) {
+                                return checkVisiblility($(this), o, d, "checkbox", null, null);
+                            });
                         } else {
                             checkbox.attr("checked", false);
+                            link.style("visibility", function (o) {
+                                return checkVisiblility($(this), o, d, "checkbox", null, null);
+                            });
                         }
-                        link.style("visibility", function (o) {
-                            return checkVisiblility($(this), o, d, "checkbox", null, null);
-                        });
                     });
                 d3.select(this).append("span")
                     .text(function (d) {
@@ -129,18 +140,23 @@ d3.json(packets, function (data) {
             });
     }
 
-
     /**
-     * Checkbox - Layer 5
-     * DNS, HTTP, FTP, Frame
-     */
-    createCheckboxForLayer(5, ["dns", "http", "ftp", "frame"]);
+         * Checkbox - Layer 7
+         * DNS, HTTP, SMTP
+         */
+    createCheckboxForLayer(7, ["dns", "http", "smtp"]);
 
     /**
      * Checkbox - Layer 4
-     * ICMP, TCP, UDP, SMTP, SNMP
+     * ICMP, TCP, UDP
      */
-    createCheckboxForLayer(4, ["icmp", "tcp", "udp", "smtp", "snpm"]);
+    createCheckboxForLayer(4, ["icmp", "tcp", "udp"]);
+
+    /**
+     * Checkbox - Layer 2
+     * Frame
+     */
+    createCheckboxForLayer(2, ["frame"]);
 
     /**
      * Create the force directed graph layout

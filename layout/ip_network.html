@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>D3 Network Graph - Project Task</title>
@@ -12,42 +13,48 @@
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/main.css">
 </head>
+
 <body>
 
-<!-- DIV to display the whole network panel graph -->
-<div id="networkpanel"> </div>
+    <!-- DIV to display the whole network panel graph -->
+    <div id="networkpanel"> </div>
 
-<!-- Form to display the filter checkboxes -->
-<form id="form_filter">
-    <h3>Choose your filter options:</h3>
-    <fieldset>
-        <div class="filter_label_text">
-            <p class="filter_label_layer" id="layer_5"> Layer 5 </p>
-        </div>
-        <div class="filterContainerLayer5"></div>
-    </fieldset>
-    <fieldset>
-        <div class="filter_label_text">
-            <p class="filter_label_layer" id="layer_4"> Layer 4 </p>
-        </div>
-        <div class="filterContainerLayer4"></div>
-    </fieldset>
-    <br/>
-    <button id="btn_showLocalNodes">Show local nodes</button>
-</form>
+    <!-- Form to display the filter checkboxes -->
+    <form id="form_filter">
+        <h3>Choose your filter options:</h3>
+        <fieldset>
+            <div class="filter_label_text">
+                <p class="filter_label_layer" id="layer_7"> Layer 7 </p>
+            </div>
+            <div class="filterContainerLayer7"></div>
+        </fieldset>
+        <fieldset>
+            <div class="filter_label_text">
+                <p class="filter_label_layer" id="layer_4"> Layer 4 </p>
+            </div>
+            <div class="filterContainerLayer4"></div>
+        </fieldset>
+        <fieldset>
+            <div class="filter_label_text">
+                <p class="filter_label_layer" id="layer_2"> Layer 2 </p>
+            </div>
+            <div class="filterContainerLayer2"></div>
+        </fieldset>
+        <br/>
+        <button id="btn_showLocalNodes">Show local nodes</button>
+    </form>
 
-<!-- DIV to display the filter Slider -->
-<div id="slidecontainer">
-    <p id="timeSlider_label">
-        <label for="slider_range">Time range:</label>
-        <input type="text" id="slider_range" readonly>
-    </p>
-    <div id="timeSlider"> </div>
-</div>
+    <!-- DIV to display the filter Slider -->
+    <div id="slidecontainer">
+        <p id="timeSlider_label">
+            <label for="slider_range">Time range:</label>
+            <input type="text" id="slider_range" readonly>
+        </p>
+        <div id="timeSlider"> </div>
+    </div>
 
-<!-- d3 visualization file -->
-<script src="../javascript/d3_network_visualization.js"></script>
+    <!-- d3 visualization file -->
+    <script src="../javascript/d3_network_visualization.js"></script>
 </body>
+
 </html>
-
-

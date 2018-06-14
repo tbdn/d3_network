@@ -12,6 +12,9 @@
   width: 100%;
   height: 2.5em; }
 
+fieldset {
+  min-height: 100px; }
+
 /**
     Styling: Node Options
  */
