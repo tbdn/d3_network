@@ -14,6 +14,19 @@ const svg = d3.select("#networkpanel")
     .attr("height", height);
 
 /**
+ * Function to update all links
+ */
+let updateAllLinks = function () {
+    d3.select("#networkpanel").selectAll("line")
+        .each(function (d) {
+            svg.selectAll(".link").style("visibility", function (o) {
+                var vis = checkVisiblility($(this), o, d, "checkbox", null, null);
+                return vis;
+            });
+        });
+}
+
+/**
  * Uncheck all Checkboxes from different categories (layers)
  * 
  * @param {integer} layer 
@@ -23,12 +36,12 @@ let setCategory = function (layer, checked) {
     LAYERS.forEach(function (elem) {
         if (layer != elem) {
             $(".filterContainerLayer" + elem + " input").each(function (index, input) {
-                console.log($(input));
-                $(input).prop("checked", checked);
+                $(input).prop("checked", checked);  // Setzen des Hakens der Checkbox
+                $(input).attr("checked", false);    // Setzen des DOM-Attributes der Checkbox
             });
         }
-        console.log(elem);
     })
+    updateAllLinks();
 };
 
 /**
@@ -36,7 +49,7 @@ let setCategory = function (layer, checked) {
  * - Triggered through Checkbox select and slider update
  */
 let checkVisiblility = function (that, o, d, type, sliderMin, sliderMax) {
-    let newVIS = that.css("visibility");
+    let newVIS = "hidden";
     if (sliderMin == null) {
         sliderMin = $("#timeSlider").slider("values", 0);
     }
@@ -55,7 +68,6 @@ let checkVisiblility = function (that, o, d, type, sliderMin, sliderMax) {
                     newVIS = "visible";
                     return true;
                 } else {
-                    newVIS = "hidden";
                     return false;
                 }
             }
@@ -68,13 +80,11 @@ let checkVisiblility = function (that, o, d, type, sliderMin, sliderMax) {
                             newVIS = "visible";
                             return true;
                         } else {
-                            newVIS = "hidden";
                             return false;
                         }
                     }
                 });
             } else {
-                newVIS = "hidden";
                 return false;
             }
         }
@@ -126,6 +136,7 @@ d3.json(packets, function (data) {
                         } else {
                             checkbox.attr("checked", false);
                         }
+                        updateAllLinks();
                         link.style("visibility", function (o) {
                             return checkVisiblility($(this), o, d, "checkbox", null, null);
                         });
