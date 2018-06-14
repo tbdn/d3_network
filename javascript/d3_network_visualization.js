@@ -4,6 +4,7 @@ let minTime = null;
 let maxTime = null;
 let showLocals = false;
 let timeRange;
+const LAYERS = [2, 4, 7]
 
 const width = document.getElementById("networkpanel").clientWidth;
 const height = document.getElementById("networkpanel").clientHeight;
@@ -12,10 +13,14 @@ const svg = d3.select("#networkpanel")
     .attr("width", width)
     .attr("height", height);
 
-let setCategory = function(layer, checked){
-    $(".filterContainerLayer"+layer+" input").each(function(index, input){
-        $(input).prop("checked",checked);
-    });
+let setCategory = function (layer, checked) {
+    LAYERS.forEach(function (elem) {
+        if (layer != elem) {
+            $(".filterContainerLayer" + elem + " input").each(function (index, input) {
+                $(input).prop("checked", checked);
+            });
+        }
+    })
 };
 
 /**
@@ -84,77 +89,58 @@ $("#btn_showLocalNodes").click(function (e) {
 });
 
 d3.json(packets, function (data) {
+
+    /**
+     * Function to create the checkboxes including the fieldset
+     * @param {integer} layerNumber 
+     * @param {array[string]} data 
+     */
+    var createCheckboxForLayer = function (layerNumber, data) {
+        d3.select(".filterContainerLayer" + layerNumber).selectAll("div")
+            .data(data)
+            .enter()
+            .append("div")
+            .attr("class", "checkbox-container")
+            .append("div")
+            .attr("class", "layer" + layerNumber)
+            .each(function (d) {
+                // create checkbox for each data
+                d3.select(this).append("input")
+                    .attr("type", "checkbox")
+                    .attr("id", function (d) {
+                        return "chk_" + d;
+                    })
+                    .on("click", function (d, i) {
+                        let checkbox = $("#chk_" + d).filter("[type='checkbox']");
+                        if (checkbox[0].checked) {
+                            checkbox.attr("checked", true);
+                            setCategory(layerNumber, false);
+                        } else {
+                            checkbox.attr("checked", false);
+                        }
+                        link.style("visibility", function (o) {
+                            return checkVisiblility($(this), o, d, "checkbox", null, null);
+                        });
+                    });
+                d3.select(this).append("span")
+                    .text(function (d) {
+                        return d;
+                    });
+            });
+    }
+
+
     /**
      * Checkbox - Layer 5
      * DNS, HTTP, FTP, Frame
      */
-    d3.select(".filterContainerLayer5").selectAll("div")
-        .data(["dns", "http", "ftp", "frame"])
-        .enter()
-        .append("div")
-        .attr("class", "checkbox-container")
-        .append("div")
-        .attr("class", "layer5")
-        .each(function (d) {
-            // create checkbox for each data
-            d3.select(this).append("input")
-                .attr("type", "checkbox")
-                .attr("id", function (d) {
-                    return "chk_" + d;
-                })
-                .on("click", function (d, i) {
-                    let checkbox = $("#chk_" + d).filter("[type='checkbox']");
-                    if (checkbox[0].checked) {
-                        checkbox.attr("checked", true);
-                        setCategory(4, false);
-                    } else {
-                        checkbox.attr("checked", false);
-                    }
-                    link.style("visibility", function (o) {
-                        return checkVisiblility($(this), o, d, "checkbox", null, null);
-                    });
-                });
-            d3.select(this).append("span")
-                .text(function (d) {
-                    return d;
-                });
-        });
+    createCheckboxForLayer(5, ["dns", "http", "ftp", "frame"]);
 
     /**
      * Checkbox - Layer 4
      * ICMP, TCP, UDP, SMTP, SNMP
      */
-    d3.select(".filterContainerLayer4").selectAll("div")
-        .data(["icmp", "tcp", "udp", "smtp", "snpm"])
-        .enter()
-        .append("div")
-        .attr("class", "checkbox-container")
-        .append("div")
-        .attr("class", "layer4")
-        .each(function (d) {
-            // create checkbox for each data
-            d3.select(this).append("input")
-                .attr("type", "checkbox")
-                .attr("id", function (d) {
-                    return "chk_" + d;
-                })
-                .on("click", function (d, i) {
-                    let checkbox = $("#chk_" + d).filter("[type='checkbox']");
-                    if (checkbox[0].checked) {
-                        checkbox.attr("checked", true);
-                        setCategory(5,false);
-                    } else {
-                        checkbox.attr("checked", false);
-                    }
-                    link.style("visibility", function (o) {
-                        return checkVisiblility($(this), o, d, "checkbox", null, null);
-                    });
-                });
-            d3.select(this).append("span")
-                .text(function (d) {
-                    return d;
-                });
-        });
+    createCheckboxForLayer(4, ["icmp", "tcp", "udp", "smtp", "snpm"]);
 
     /**
      * Create the force directed graph layout
