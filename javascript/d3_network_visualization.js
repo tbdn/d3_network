@@ -3,6 +3,7 @@ var packets = "../data/packets.json";
 let minTime = null;
 let maxTime = null;
 let showLocals = false;
+let showNodeNames = false;
 let timeRange;
 const LAYERS = [2, 4, 7];
 
@@ -87,6 +88,23 @@ $("#btn_showLocalNodes").click(function (e) {
     });
 });
 
+/**
+ * Button to toggle node names
+ */
+$("#btn_toggleNodeNames").click(function (e) {
+    e.preventDefault();
+    showNodeNames = !showNodeNames;
+    var node = d3.select("#networkpanel").selectAll(".node");
+    if (showNodeNames) {
+        node.append("text")
+            .attr("class", "nodetext")
+            .text(function (d) { return d.ip; });
+    } else {
+        node.selectAll(".nodetext").text(function (d) { return ""});
+    }
+});
+
+
 d3.json(packets, function (data) {
 
     /**
@@ -130,9 +148,9 @@ d3.json(packets, function (data) {
     };
 
     /**
-         * Checkbox - Layer 7
-         * DNS, HTTP, SMTP
-         */
+     * Checkbox - Layer 7
+     * DNS, HTTP, SMTP
+     */
     createCheckboxForLayer(7, ["dns", "http", "smtp"]);
 
     /**
@@ -217,13 +235,6 @@ d3.json(packets, function (data) {
     node.append("circle")
         .attr("class", "nodeshape")
         .attr("r", 5);
-
-    /**
-     * Set the node text
-     */
-    node.append("text")
-        .attr("class", "nodetext")
-        .text(function (d) { return d.ip; });
 
     /**
      * Define the animation (force directed)
