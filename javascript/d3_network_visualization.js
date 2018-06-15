@@ -6,6 +6,7 @@ let showLocals = false;
 let showNodeNames = false;
 let timeRange;
 const LAYERS = [2, 4, 7];
+let checkboxes = [];
 
 const width = document.getElementById("networkpanel").clientWidth;
 const height = document.getElementById("networkpanel").clientHeight;
@@ -101,7 +102,6 @@ $("#btn_toggleNodeNames").click(function (e) {
 
 
 d3.json(packets, function (data) {
-
     /**
      * Function to create the checkboxes
      * @param {integer} layerNumber 
@@ -182,10 +182,6 @@ d3.json(packets, function (data) {
             var classes = "link";
             d.packets.forEach(function (packet) {
                 packet.layers.forEach(function (elem, index) {
-                    if ($(".filterContainerLayer" + (index+1) + " #chk_" + elem).length == 0) {
-                        console.log("Creating checkbox for "+elem+" at layer "+(index+1));
-                        createCheckboxForLayer(index + 1, [elem]);
-                    }
                     if (!classes.includes(elem)) {
                         classes = classes + " " + elem;
                     }
@@ -198,6 +194,7 @@ d3.json(packets, function (data) {
                     maxTime = packet.timestamp;
                 }
             });
+
             timeRange = maxTime - minTime;
             return classes;
         })
@@ -282,5 +279,19 @@ d3.json(packets, function (data) {
                     });
                 });
         }
+    });
+    data.links.forEach(function (link) {
+        link.packets.forEach(function (packet) {
+            packet.layers.forEach(function(layer, index){
+                if(checkboxes[index+1] === undefined){
+                    checkboxes[index+1] = new Set();
+                }
+                checkboxes[index+1].add(layer);
+            });
+        });
+    });
+    checkboxes.forEach(function (elem, index){
+        console.log(index+": "+JSON.stringify(Array.from(elem)));
+        createCheckboxForLayer(index, Array.from(elem));
     });
 });
