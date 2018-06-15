@@ -9,8 +9,11 @@
   position: relative; }
 
 button {
-  width: 100%;
-  height: 2.5em; }
+  width: 45%;
+  height: 2.5em;
+  margin-top: 15px;
+  margin-left: 3%;
+  float: left; }
 
 fieldset {
   min-height: 100px; }

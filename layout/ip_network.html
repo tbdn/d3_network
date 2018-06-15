@@ -22,24 +22,29 @@
     <!-- Form to display the filter checkboxes -->
     <form id="form_filter">
         <h3>Choose your filter options:</h3>
-        <fieldset>
-            <div class="filter_label_text">
-                <p class="filter_label_layer" id="layer_7"> Layer 7 </p>
-            </div>
-            <div class="filterContainerLayer7"></div>
-        </fieldset>
-        <fieldset>
-            <div class="filter_label_text">
-                <p class="filter_label_layer" id="layer_4"> Layer 4 </p>
-            </div>
-            <div class="filterContainerLayer4"></div>
-        </fieldset>
-        <fieldset>
-            <div class="filter_label_text">
-                <p class="filter_label_layer" id="layer_2"> Layer 2 </p>
-            </div>
-            <div class="filterContainerLayer2"></div>
-        </fieldset>
+        <div id="filterContainerMain">
+            <fieldset>
+                <div class="filter_label_text">
+                    <p class="filter_label_layer" id="layer_7"> Layer 7 </p>
+                </div>
+                <!-- Container for the Checkboxes - Filled in d3 -->
+                <div class="filterContainerLayer7"></div>
+            </fieldset>
+            <fieldset>
+                <div class="filter_label_text">
+                    <p class="filter_label_layer" id="layer_4"> Layer 4 </p>
+                </div>
+                <!-- Container for the Checkboxes - Filled in d3 -->
+                <div class="filterContainerLayer4"></div>
+            </fieldset>
+            <fieldset>
+                <div class="filter_label_text">
+                    <p class="filter_label_layer" id="layer_2"> Layer 2 </p>
+                </div>
+                <!-- Container for the Checkboxes - Filled in d3 -->
+                <div class="filterContainerLayer2"></div>
+            </fieldset>
+        </div>
         <br/>
         <button id="btn_showLocalNodes">Show local nodes</button>
         <button id="btn_toggleNodeNames">Toggle node names</button>
