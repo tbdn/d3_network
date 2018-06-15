@@ -146,7 +146,7 @@ d3.json(packets, function (data) {
      * Checkbox - Layer 7
      * DNS, HTTP, SMTP
      */
-    createCheckboxForLayer(7, ["dns", "http", "smtp"]);
+    createCheckboxForLayer(7, ["dns", "http", "smtp", "telnet"]);
 
     /**
      * Checkbox - Layer 4
