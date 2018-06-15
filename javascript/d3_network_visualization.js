@@ -147,7 +147,7 @@ d3.json(packets, function (data) {
      * Create the force directed graph layout
      */
     var force = d3.layout.force()
-        .charge(-600)
+        .charge(-400)
         .linkDistance(40)
         .size([width, height])
         .nodes(data.nodes)
