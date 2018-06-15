@@ -18,28 +18,20 @@ public class Preprocessor {
     }
 
     public void parse() throws IOException {
+
+        final int LIMIT = 40;
+
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(NaivePacket.class, new PacketDeserializer());
         Gson parser = builder.create();
         ArrayList<NaivePacket> rawNaivePackets = parser.fromJson(new FileReader(input), new TypeToken<ArrayList<NaivePacket>>(){}.getType());
-        System.out.println("Done Parsing");
+        System.out.println("Done Parsing, parsed "+rawNaivePackets.size()+" packets");
         rawNaivePackets.removeIf(link -> link.srcIP == null || link.dstIP == null);
 
-        Random r = new Random();
-
-        ArrayList<NaivePacket> naivePackets = new ArrayList<>();
-        for(int i = 0; i < 50; i++){
-            int randInt = r.nextInt(rawNaivePackets.size());
-            naivePackets.add(rawNaivePackets.get(randInt));
-            rawNaivePackets.remove(randInt);
-        }
-
-        final int size = naivePackets.size();
+        ArrayList<NaivePacket> naivePackets = rawNaivePackets;
 
         ArrayList<Link> uniqueLinks = new ArrayList<>();
-        int j = 0;
         for(NaivePacket npacket : naivePackets){
-            j++;
             Link l = new Link(npacket.srcIP, npacket.dstIP);
             if(uniqueLinks.contains(l)){
                 l = uniqueLinks.get(uniqueLinks.indexOf(l));
@@ -51,7 +43,20 @@ public class Preprocessor {
             l.packets.add(new Packet(npacket));
         }
 
-        System.out.println("Done Linking");
+        int linkCount = uniqueLinks.size();
+        if(LIMIT > 0){
+            Random r = new Random();
+            ArrayList<Link> finalLinks = new ArrayList<>();
+            for(int i = 0; i < Math.min(LIMIT, linkCount); i++){
+                int randInt = r.nextInt(uniqueLinks.size());
+                finalLinks.add(uniqueLinks.get(randInt));
+                uniqueLinks.remove(randInt);
+            }
+            uniqueLinks = finalLinks;
+
+        }
+
+        System.out.printf("Done Linking, using %d of %d links%n", uniqueLinks.size(), linkCount);
 
         HashSet<String> uniqueIPs = new HashSet<>();
 
@@ -98,7 +103,7 @@ public class Preprocessor {
         d.nodes = nodes;
         parser.toJson(d, writer);
         writer.close();
-        System.out.println("Done");
+        System.out.println("Preprocessing done, created "+nodes.length+" unique nodes.");
     }
 
     /*public void toSunBurst() throws IOException {

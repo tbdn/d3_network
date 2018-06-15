@@ -1,4 +1,4 @@
-var packets = "../data/outside.json";
+var packets = "../data/fullPackets.json";
 
 let minTime = null;
 let maxTime = null;
