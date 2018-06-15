@@ -1,4 +1,4 @@
-var packets = "../data/packets.json";
+var packets = "../data/outside.json";
 
 let minTime = null;
 let maxTime = null;
@@ -146,19 +146,19 @@ d3.json(packets, function (data) {
      * Checkbox - Layer 7
      * DNS, HTTP, SMTP
      */
-    createCheckboxForLayer(7, ["dns", "http", "smtp", "telnet"]);
+    //createCheckboxForLayer(7, ["dns", "http", "smtp", "telnet"]);
 
     /**
      * Checkbox - Layer 4
      * ICMP, TCP, UDP
      */
-    createCheckboxForLayer(4, ["icmp", "tcp", "udp"]);
+    //createCheckboxForLayer(4, ["icmp", "tcp", "udp"]);
 
     /**
      * Checkbox - Layer 2
      * Frame
      */
-    createCheckboxForLayer(2, ["eth"]);
+    //createCheckboxForLayer(2, ["eth"]);
 
     /**
      * Create the force directed graph layout
@@ -181,7 +181,11 @@ d3.json(packets, function (data) {
         .attr("class", function (d) {
             var classes = "link";
             d.packets.forEach(function (packet) {
-                packet.layers.forEach(function (elem) {
+                packet.layers.forEach(function (elem, index) {
+                    if ($(".filterContainerLayer" + (index+1) + " #chk_" + elem).length == 0) {
+                        console.log("Creating checkbox for "+elem+" at layer "+(index+1));
+                        createCheckboxForLayer(index + 1, [elem]);
+                    }
                     if (!classes.includes(elem)) {
                         classes = classes + " " + elem;
                     }
