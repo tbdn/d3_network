@@ -144,24 +144,6 @@ d3.json(packets, function (data) {
     };
 
     /**
-     * Checkbox - Layer 7
-     * DNS, HTTP, SMTP
-     */
-    //createCheckboxForLayer(7, ["dns", "http", "smtp", "telnet"]);
-
-    /**
-     * Checkbox - Layer 4
-     * ICMP, TCP, UDP
-     */
-    //createCheckboxForLayer(4, ["icmp", "tcp", "udp"]);
-
-    /**
-     * Checkbox - Layer 2
-     * Frame
-     */
-    //createCheckboxForLayer(2, ["frame"]);
-
-    /**
      * Create the force directed graph layout
      */
     var force = d3.layout.force()
@@ -266,7 +248,7 @@ d3.json(packets, function (data) {
         range: true,
         min: 0,
         max: 100,
-        values: [10, 80],
+        values: [0, 100],
         /**
          * Define the slide event
          */
