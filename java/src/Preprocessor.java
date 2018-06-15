@@ -22,24 +22,24 @@ public class Preprocessor {
         builder.registerTypeAdapter(NaivePacket.class, new PacketDeserializer());
         Gson parser = builder.create();
         ArrayList<NaivePacket> rawNaivePackets = parser.fromJson(new FileReader(input), new TypeToken<ArrayList<NaivePacket>>(){}.getType());
-        System.out.println("Done Parsing");
+        System.out.println("Done Parsing, parsed "+rawNaivePackets.size()+" packets");
         rawNaivePackets.removeIf(link -> link.srcIP == null || link.dstIP == null);
 
-        Random r = new Random();
+        ArrayList<NaivePacket> naivePackets = rawNaivePackets;
+
+        /*Random r = new Random();
 
         ArrayList<NaivePacket> naivePackets = new ArrayList<>();
         for(int i = 0; i < 50; i++){
             int randInt = r.nextInt(rawNaivePackets.size());
             naivePackets.add(rawNaivePackets.get(randInt));
             rawNaivePackets.remove(randInt);
-        }
+        }*/
 
         final int size = naivePackets.size();
 
         ArrayList<Link> uniqueLinks = new ArrayList<>();
-        int j = 0;
         for(NaivePacket npacket : naivePackets){
-            j++;
             Link l = new Link(npacket.srcIP, npacket.dstIP);
             if(uniqueLinks.contains(l)){
                 l = uniqueLinks.get(uniqueLinks.indexOf(l));
