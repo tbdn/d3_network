@@ -36,3 +36,4 @@
 - Connecting the nodes via edges
   - enable or disable the edges to get more information
 - Move the nodes to get a better view of the whole situation
+- Time and type filters for connections (Dynamic)
