@@ -16,6 +16,12 @@
 > Used jQuery and jQuery UI for the Range-Slider-Functionality
 
 ## Usage
+### Optional Preprocessing
+- Export packets from Wireshark as JSON
+- Run the java program Main with the path to the json dump as a parameter
+  - Optional second parameter: Limit the amount of contained links
+- Retrieve preprocessed dump from the "out" folder
+
 ### General Usage
 - Launch a Webserver inside the root folder at Port 80 or Port 8080
 - Open the file "ip_network.html" inside the layout folder to open the webapp in your favourite Browser (>IE10)
