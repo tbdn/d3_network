@@ -181,7 +181,7 @@ d3.json(packets, function (data) {
         .attr("class", function (d) {
             var classes = "link";
             d.packets.forEach(function (packet) {
-                packet.layers.forEach(function (elem, index) {
+                packet.layers.forEach(function (elem) {
                     if (!classes.includes(elem)) {
                         classes = classes + " " + elem;
                     }
@@ -194,7 +194,6 @@ d3.json(packets, function (data) {
                     maxTime = packet.timestamp;
                 }
             });
-
             timeRange = maxTime - minTime;
             return classes;
         })
