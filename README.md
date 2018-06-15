@@ -7,9 +7,9 @@
 - Source of Code: jQuery UI for the Slider, annotated inside of the code http://jqueryui.com/slider/#range
 
 ## Used Frameworks
-- D3 Version 3.5.5
-- jQuery Version 3.3.1
-- jQuery UI Version 1.12.1
+- D3 Version 3.5.5 https://github.com/d3/d3/releases/tag/v3.5.5
+- jQuery Version 3.3.1 https://code.jquery.com/jquery-3.3.1.min.js
+- jQuery UI Version 1.12.1 https://jqueryui.com/resources/download/jquery-ui-1.12.1.zip
 
 > Used D3 to visualize information
 
