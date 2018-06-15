@@ -158,7 +158,7 @@ d3.json(packets, function (data) {
      * Checkbox - Layer 2
      * Frame
      */
-    createCheckboxForLayer(2, ["frame"]);
+    createCheckboxForLayer(2, ["eth"]);
 
     /**
      * Create the force directed graph layout
