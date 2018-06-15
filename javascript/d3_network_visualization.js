@@ -34,7 +34,7 @@ let updateAllLinks = function () {
  * @param {boolean} checked 
  */
 let setCategory = function (layer, checked) {
-    LAYERS.forEach(function (elem) {
+    checkboxes.forEach(function (data, elem) {
         if (layer != elem) {
             $(".filterContainerLayer" + elem + " input").each(function (index, input) {
                 $(input).prop("checked", checked);  // Setzen des Hakens der Checkbox
@@ -291,7 +291,6 @@ d3.json(packets, function (data) {
         });
     });
     checkboxes.forEach(function (elem, index){
-        console.log(index+": "+JSON.stringify(Array.from(elem)));
         createCheckboxForLayer(index, Array.from(elem));
     });
 });
