@@ -17,9 +17,9 @@ public class Preprocessor {
         input = new File(filename);
     }
 
-    public void parse() throws IOException {
+    public void parse(int limit) throws IOException {
 
-        final int LIMIT = 40;
+        final int LIMIT = limit;
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(NaivePacket.class, new PacketDeserializer());
