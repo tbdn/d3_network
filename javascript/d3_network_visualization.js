@@ -10,10 +10,7 @@ let checkboxes = [];
 
 const width = document.getElementById("networkpanel").clientWidth;
 const height = document.getElementById("networkpanel").clientHeight;
-const svg = d3.select("#networkpanel")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height);
+var svg;
 
 /**
  * Function to update all links
@@ -105,6 +102,11 @@ $("#btn_toggleNodeNames").click(function (e) {
  */
 $("#btn_loadGraph").click(function (e) {
     e.preventDefault();
+    d3.select("svg").remove();
+    svg = d3.select("#networkpanel")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
     let file = "../data/" + $('#selectFile').val() + ".json";
     loadGraph(file);
 });
