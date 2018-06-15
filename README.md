@@ -28,4 +28,10 @@
 - Press the button "Toggle node names" to toggle the node names
 
 ## Techniques
-- 
+- Force-Directed Graph
+  - Structure or a tree
+- Coloring the Nodes by type
+  - Local or not Local Addresses
+- Connecting the nodes via edges
+  - enable or disable the edges to get more information
+- Move the nodes to get a better view of the whole situation
