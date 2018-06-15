@@ -17,6 +17,7 @@
 
 ## Usage
 ### General Usage
+- Launch a Webserver inside the root folder at Port 80 or Port 8080
 - Open the file "ip_network.html" inside the layout folder to open the webapp in your favourite Browser (>IE10)
 
 ### Option Usage
