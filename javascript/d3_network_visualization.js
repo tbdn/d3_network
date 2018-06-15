@@ -100,179 +100,190 @@ $("#btn_toggleNodeNames").click(function (e) {
 
 });
 
+/**
+ * Button to load the graph
+ */
+$("#btn_loadGraph").click(function (e) {
+    e.preventDefault();
+    let file = "../data/" + $('#selectFile').val() + ".json";
+    loadGraph(file);
+});
 
-d3.json(packets, function (data) {
+var loadGraph = function(file) {
+    d3.json(file, function (data) {
 
-    /**
-     * Function to create the checkboxes
-     * @param {integer} layerNumber 
-     * @param {array[string]} data 
-     */
-    var createCheckboxForLayer = function (layerNumber, data) {
-        d3.select(".filterContainerLayer" + layerNumber).selectAll("div")
-            .data(data)
-            .enter()
-            .append("div")
-            .attr("class", "checkbox-container")
-            .append("div")
-            .attr("class", "layer" + layerNumber)
-            .each(function (d) {
-                // create checkbox for each data
-                d3.select(this).append("input")
-                    .attr("type", "checkbox")
-                    .attr("id", function (layerName) {
-                        return "chk_" + layerName;
-                    })
-                    .on("click", function (layerName, i) {
-                        let checkbox = $("#chk_" + layerName).filter("[type='checkbox']");
-                        if (checkbox[0].checked) {
-                            checkbox.attr("checked", true);
-                            setCategory(layerNumber, false);
-                        } else {
-                            checkbox.attr("checked", false);
-                        }
-                        updateAllLinks();
-                        link.style("visibility", function (linkObject) {
-                            return checkVisiblility($(this), linkObject, layerName, null, null);
+        /**
+         * Function to create the checkboxes
+         * @param {integer} layerNumber
+         * @param {array[string]} data
+         */
+        var createCheckboxForLayer = function (layerNumber, data) {
+            d3.select(".filterContainerLayer" + layerNumber).selectAll("div")
+                .data(data)
+                .enter()
+                .append("div")
+                .attr("class", "checkbox-container")
+                .append("div")
+                .attr("class", "layer" + layerNumber)
+                .each(function (d) {
+                    // create checkbox for each data
+                    d3.select(this).append("input")
+                        .attr("type", "checkbox")
+                        .attr("id", function (layerName) {
+                            return "chk_" + layerName;
+                        })
+                        .on("click", function (layerName, i) {
+                            let checkbox = $("#chk_" + layerName).filter("[type='checkbox']");
+                            if (checkbox[0].checked) {
+                                checkbox.attr("checked", true);
+                                setCategory(layerNumber, false);
+                            } else {
+                                checkbox.attr("checked", false);
+                            }
+                            updateAllLinks();
+                            link.style("visibility", function (linkObject) {
+                                return checkVisiblility($(this), linkObject, layerName, null, null);
+                            });
                         });
-                    });
-                d3.select(this).append("span")
-                    .text(function (layerName) {
-                        return layerName;
-                    });
-            });
-    };
+                    d3.select(this).append("span")
+                        .text(function (layerName) {
+                            return layerName;
+                        });
+                });
+        };
 
-    /**
-     * Create the force directed graph layout
-     */
-    var force = d3.layout.force()
-        .charge(-400)
-        .linkDistance(40)
-        .size([width, height])
-        .nodes(data.nodes)
-        .links(data.links)
-        .start();
+        /**
+         * Create the force directed graph layout
+         */
+        var force = d3.layout.force()
+            .charge(-400)
+            .linkDistance(40)
+            .size([width, height])
+            .nodes(data.nodes)
+            .links(data.links)
+            .start();
 
-    /**
-     * Draw the graph edges
-     */
-    var link = svg.selectAll(".link")
-        .data(data.links)
-        .enter()
-        .append("line")
-        .attr("class", function (d) {
-            var classes = "link";
-            d.packets.forEach(function (packet) {
-                packet.layers.forEach(function (elem) {
-                    if (!classes.includes(elem)) {
-                        classes = classes + " " + elem;
+        /**
+         * Draw the graph edges
+         */
+        var link = svg.selectAll(".link")
+            .data(data.links)
+            .enter()
+            .append("line")
+            .attr("class", function (d) {
+                var classes = "link";
+                d.packets.forEach(function (packet) {
+                    packet.layers.forEach(function (elem) {
+                        if (!classes.includes(elem)) {
+                            classes = classes + " " + elem;
+                        }
+                    });
+                    packet.timestamp = parseFloat(packet.timestamp);
+                    if (minTime == null || packet.timestamp < minTime) {
+                        minTime = packet.timestamp;
+                    }
+                    if (maxTime == null || packet.timestamp > maxTime) {
+                        maxTime = packet.timestamp;
                     }
                 });
-                packet.timestamp = parseFloat(packet.timestamp);
-                if (minTime == null || packet.timestamp < minTime) {
-                    minTime = packet.timestamp;
-                }
-                if (maxTime == null || packet.timestamp > maxTime) {
-                    maxTime = packet.timestamp;
-                }
-            });
-            timeRange = maxTime - minTime;
-            return classes;
-        })
-        .attr("visibility", "hidden");
+                timeRange = maxTime - minTime;
+                return classes;
+            })
+            .attr("visibility", "hidden");
 
-    /**
-     * Draw the graph nodes
-     */
-    var node = svg.selectAll(".node")
-        .data(data.nodes)
-        .enter()
-        .append("g")
-        .attr("class", "node");
-
-    /**
-     * Set the edge titles (hover)
-     */
-    link.append("title")
-        .text(function (d) {
-            return "source: " + d.source.ip + "\n" + "target: " + d.target.ip;
-        });
-
-    /**
-     * Set the node titles (hover)
-     */
-    node.append("title")
-        .text(function (d) {
-            return "ip: " + d.ip;
-        });
-
-    /**
-     * Define the node shape
-     */
-    node.append("circle")
-        .attr("class", "nodeshape")
-        .attr("r", 5);
-
-    /**
-     * Set node text
-     */
-    node.append("text")
-        .attr("class", "nodetext")
-        .text(function (d) { return "" });
-    /**
-     * Define the animation (force directed)
-     * pull / push nodes
-     */
-    force.on("tick", function () {
-        link.attr("x1", function (d) { return d.source.x; })
-            .attr("y1", function (d) { return d.source.y; })
-            .attr("x2", function (d) { return d.target.x; })
-            .attr("y2", function (d) { return d.target.y; });
-
-        node.attr("transform", function (d) {
-            return "translate(" + d.x + ", " + d.y + ")";
-        });
-    });
-
-    /**
-     * Bind the drag interaction to the nodes
-     */
-    node.call(force.drag);
-
-    /**
-     * Create the slider
-     * Initial code from http://jqueryui.com/slider/#range
-     */
-    $("#timeSlider").slider({
-        range: true,
-        min: 0,
-        max: 100,
-        values: [0, 100],
         /**
-         * Define the slide event
+         * Draw the graph nodes
          */
-        slide: function (event, ui) {
-            $("#slider_range").val(ui.values[0] + " - " + ui.values[1]);
-            d3.select("#networkpanel").selectAll("line")
-                .each(function (d) {
-                    link.style("visibility", function (o) {
-                        return checkVisiblility($(this), o, d, ui.values[0], ui.values[1]);
-                    });
-                });
-        }
-    });
-    data.links.forEach(function (link) {
-        link.packets.forEach(function (packet) {
-            packet.layers.forEach(function(layer, index){
-                if(checkboxes[index+1] === undefined){
-                    checkboxes[index+1] = new Set();
-                }
-                checkboxes[index+1].add(layer);
+        var node = svg.selectAll(".node")
+            .data(data.nodes)
+            .enter()
+            .append("g")
+            .attr("class", "node");
+
+        /**
+         * Set the edge titles (hover)
+         */
+        link.append("title")
+            .text(function (d) {
+                return "source: " + d.source.ip + "\n" + "target: " + d.target.ip;
+            });
+
+        /**
+         * Set the node titles (hover)
+         */
+        node.append("title")
+            .text(function (d) {
+                return "ip: " + d.ip;
+            });
+
+        /**
+         * Define the node shape
+         */
+        node.append("circle")
+            .attr("class", "nodeshape")
+            .attr("r", 5);
+
+        /**
+         * Set node text
+         */
+        node.append("text")
+            .attr("class", "nodetext")
+            .text(function (d) { return "" });
+        /**
+         * Define the animation (force directed)
+         * pull / push nodes
+         */
+        force.on("tick", function () {
+            link.attr("x1", function (d) { return d.source.x; })
+                .attr("y1", function (d) { return d.source.y; })
+                .attr("x2", function (d) { return d.target.x; })
+                .attr("y2", function (d) { return d.target.y; });
+
+            node.attr("transform", function (d) {
+                return "translate(" + d.x + ", " + d.y + ")";
             });
         });
+
+        /**
+         * Bind the drag interaction to the nodes
+         */
+        node.call(force.drag);
+
+        /**
+         * Create the slider
+         * Initial code from http://jqueryui.com/slider/#range
+         */
+        $("#timeSlider").slider({
+            range: true,
+            min: 0,
+            max: 100,
+            values: [0, 100],
+            /**
+             * Define the slide event
+             */
+            slide: function (event, ui) {
+                $("#slider_range").val(ui.values[0] + " - " + ui.values[1]);
+                d3.select("#networkpanel").selectAll("line")
+                    .each(function (d) {
+                        link.style("visibility", function (o) {
+                            return checkVisiblility($(this), o, d, ui.values[0], ui.values[1]);
+                        });
+                    });
+            }
+        });
+        data.links.forEach(function (link) {
+            link.packets.forEach(function (packet) {
+                packet.layers.forEach(function(layer, index){
+                    if(checkboxes[index+1] === undefined){
+                        checkboxes[index+1] = new Set();
+                    }
+                    checkboxes[index+1].add(layer);
+                });
+            });
+        });
+        checkboxes.forEach(function (elem, index){
+            createCheckboxForLayer(index, Array.from(elem));
+        });
     });
-    checkboxes.forEach(function (elem, index){
-        createCheckboxForLayer(index, Array.from(elem));
-    });
-});
+
+}

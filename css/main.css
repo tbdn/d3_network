@@ -82,3 +82,21 @@ fieldset {
 .checkbox-container {
   padding-left: 45px;
   padding-top: 5px; }
+
+#form_loadGraphForm {
+  position: relative;
+  left: 25px;
+  float: left;
+  width: auto; }
+
+#selectFile {
+  margin-top: 40px;
+  width: 150px;
+  position: relative;
+  float: left; }
+
+#btn_loadGraph {
+  width: 100%;
+  margin-left: -1px;
+  position: relative;
+  float: left; }
