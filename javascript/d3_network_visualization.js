@@ -102,6 +102,7 @@ $("#btn_toggleNodeNames").click(function (e) {
 
 
 d3.json(packets, function (data) {
+
     /**
      * Function to create the checkboxes
      * @param {integer} layerNumber 
