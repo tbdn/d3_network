@@ -18,6 +18,9 @@ public class Preprocessor {
     }
 
     public void parse() throws IOException {
+
+        final int LIMIT = 40;
+
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(NaivePacket.class, new PacketDeserializer());
         Gson parser = builder.create();
@@ -26,17 +29,6 @@ public class Preprocessor {
         rawNaivePackets.removeIf(link -> link.srcIP == null || link.dstIP == null);
 
         ArrayList<NaivePacket> naivePackets = rawNaivePackets;
-
-        /*Random r = new Random();
-
-        ArrayList<NaivePacket> naivePackets = new ArrayList<>();
-        for(int i = 0; i < 50; i++){
-            int randInt = r.nextInt(rawNaivePackets.size());
-            naivePackets.add(rawNaivePackets.get(randInt));
-            rawNaivePackets.remove(randInt);
-        }*/
-
-        final int size = naivePackets.size();
 
         ArrayList<Link> uniqueLinks = new ArrayList<>();
         for(NaivePacket npacket : naivePackets){
@@ -51,7 +43,20 @@ public class Preprocessor {
             l.packets.add(new Packet(npacket));
         }
 
-        System.out.println("Done Linking");
+        int linkCount = uniqueLinks.size();
+        if(LIMIT > 0){
+            Random r = new Random();
+            ArrayList<Link> finalLinks = new ArrayList<>();
+            for(int i = 0; i < Math.min(LIMIT, linkCount); i++){
+                int randInt = r.nextInt(uniqueLinks.size());
+                finalLinks.add(uniqueLinks.get(randInt));
+                uniqueLinks.remove(randInt);
+            }
+            uniqueLinks = finalLinks;
+
+        }
+
+        System.out.printf("Done Linking, using %d of %d links%n", uniqueLinks.size(), linkCount);
 
         HashSet<String> uniqueIPs = new HashSet<>();
 
@@ -98,7 +103,7 @@ public class Preprocessor {
         d.nodes = nodes;
         parser.toJson(d, writer);
         writer.close();
-        System.out.println("Done");
+        System.out.println("Preprocessing done, created "+nodes.length+" unique nodes.");
     }
 
     /*public void toSunBurst() throws IOException {
